@@ -3,4 +3,38 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+    <color name="screen_bg">#f4f5f7</color>
+    <color name="title_text_color">@android:color/white</color>
+    <color name="text_second_color">#2A2A2A</color>
+    <color name="text_thired_color">#727272</color>
+    <color name="gray_line">#eeeeee</color>
+    <color name="gray_line_padding">#e0e0e0</color>
+
+    <!--> setting key value line <-->
+    <color name="colorLabel">#333</color>
+    <color name="colorText">#666</color>
+    <color name="gray_pro">#ccc</color>
+
+    <color name="gray">#ddd</color>
+    <color name="gray_chart">#888</color>
+
+    <color name="btn_permit">#009688</color>
+    <color name="btn_reject">#960B00</color>
+
+    <color name="green">#2e711d</color>
+    <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
+
+    <color name="sidebar_item_selector">#80eeeeee</color>
+
+    <color name="project_node_date">#f0f1f2</color>
+
+    <color name="node_blue">#7bb7e8</color>
+
+    <color name="screen_bg_gray">#f0f0f0</color>
+
+    <color name="plan_delay_color">#ef444d</color>
+    <color name="plan_no_delay_color">#32ce7a</color>
+    <color name="plan_maybe_delay">#f78f00</color>
 </resources>

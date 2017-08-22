@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">JarvisDemo1</string>
+    <string name="pref_key_iat_show">iat_recognize</string>
+    <string name="pref_key_translate">translate</string>
+    <string name="text_begin">请开始说话…</string>
+    <string name="app_id">599afb6e</string>
 </resources>

@@ -1,6 +1,5 @@
 package com.jd.jarvisdemo1.ui;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -21,7 +20,7 @@ public class ZxingAct extends AppCompatActivity {
         findViewById(R.id.btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(ZxingAct.this,CaptureActivity.class));
+//                startActivity(new Intent(ZxingAct.this,CaptureActivity.class));
             }
         });
     }

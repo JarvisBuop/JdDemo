@@ -14,16 +14,14 @@
  * limitations under the License.
  */
 
-package com.google.zxing.client.android.camera;
+package com.google.zxing.client.android.jdRefactor.ui.statusmode;
 
-import android.content.SharedPreferences;
-import com.google.zxing.client.android.PreferencesActivity;
+import static com.google.zxing.client.android.jdRefactor.controller.JdCodeParams.ISUSEFLASH;
 
 /**
  * Enumerates settings of the preference controlling the front light.
- * @deprecated
  */
-public enum FrontLightMode {
+public enum FrontLightMode2 {
 
   /** Always on. */
   ON,
@@ -32,12 +30,12 @@ public enum FrontLightMode {
   /** Always off. */
   OFF;
 
-  private static FrontLightMode parse(String modeString) {
+  private static FrontLightMode2 parse(String modeString) {
     return modeString == null ? OFF : valueOf(modeString);
   }
 
-  public static FrontLightMode readPref(SharedPreferences sharedPrefs) {
-    return parse(sharedPrefs.getString(PreferencesActivity.KEY_FRONT_LIGHT_MODE, OFF.toString()));
+  public static FrontLightMode2 readPref() {
+    return parse(ISUSEFLASH);
   }
 
 }

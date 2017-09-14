@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.zxing.client.android;
+package com.google.zxing.client.android.jdRefactor.handler;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -29,23 +29,22 @@ import com.google.zxing.MultiFormatReader;
 import com.google.zxing.PlanarYUVLuminanceSource;
 import com.google.zxing.ReaderException;
 import com.google.zxing.Result;
+import com.google.zxing.client.android.R;
+import com.google.zxing.client.android.jdRefactor.ui.act.CaptureActivity2;
 import com.google.zxing.common.HybridBinarizer;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Map;
 
-/**
- * @deprecated
- */
-final class DecodeHandler extends Handler {
+public final class DecodeHandler2 extends Handler {
 
-  private static final String TAG = DecodeHandler.class.getSimpleName();
+  private static final String TAG = DecodeHandler2.class.getSimpleName();
 
-  private final CaptureActivity activity;
+  private final CaptureActivity2 activity;
   private final MultiFormatReader multiFormatReader;
   private boolean running = true;
 
-  DecodeHandler(CaptureActivity activity, Map<DecodeHintType,Object> hints) {
+  public DecodeHandler2(CaptureActivity2 activity, Map<DecodeHintType,Object> hints) {
     multiFormatReader = new MultiFormatReader();
     multiFormatReader.setHints(hints);
     this.activity = activity;
@@ -114,8 +113,8 @@ final class DecodeHandler extends Handler {
     Bitmap bitmap = Bitmap.createBitmap(pixels, 0, width, width, height, Bitmap.Config.ARGB_8888);
     ByteArrayOutputStream out = new ByteArrayOutputStream();    
     bitmap.compress(Bitmap.CompressFormat.JPEG, 50, out);
-    bundle.putByteArray(DecodeThread.BARCODE_BITMAP, out.toByteArray());
-    bundle.putFloat(DecodeThread.BARCODE_SCALED_FACTOR, (float) width / source.getWidth());
+    bundle.putByteArray(DecodeThread2.BARCODE_BITMAP, out.toByteArray());
+    bundle.putFloat(DecodeThread2.BARCODE_SCALED_FACTOR, (float) width / source.getWidth());
   }
 
 }

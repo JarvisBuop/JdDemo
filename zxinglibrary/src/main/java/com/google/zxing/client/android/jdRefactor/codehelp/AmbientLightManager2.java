@@ -14,26 +14,22 @@
  * limitations under the License.
  */
 
-package com.google.zxing.client.android;
+package com.google.zxing.client.android.jdRefactor.codehelp;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.preference.PreferenceManager;
+
 import com.google.zxing.client.android.camera.CameraManager;
-import com.google.zxing.client.android.camera.FrontLightMode;
+import com.google.zxing.client.android.jdRefactor.ui.statusmode.FrontLightMode2;
 
 /**
  * Detects ambient light and switches on the front light when very dark, and off again when sufficiently light.
- *
- * @author Sean Owen
- * @author Nikolaus Huber
- * @deprecated
+ * 闪光灯控制类;
  */
-final class AmbientLightManager implements SensorEventListener {
+public final class AmbientLightManager2 implements SensorEventListener {
 
   private static final float TOO_DARK_LUX = 45.0f;
   private static final float BRIGHT_ENOUGH_LUX = 450.0f;
@@ -42,14 +38,13 @@ final class AmbientLightManager implements SensorEventListener {
   private CameraManager cameraManager;
   private Sensor lightSensor;
 
-  AmbientLightManager(Context context) {
+  public AmbientLightManager2(Context context) {
     this.context = context;
   }
 
-  void start(CameraManager cameraManager) {
+  public void start(CameraManager cameraManager) {
     this.cameraManager = cameraManager;
-    SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
-    if (FrontLightMode.readPref(sharedPrefs) == FrontLightMode.AUTO) {
+    if (FrontLightMode2.readPref() == FrontLightMode2.AUTO) {
       SensorManager sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
       lightSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
       if (lightSensor != null) {
@@ -58,7 +53,7 @@ final class AmbientLightManager implements SensorEventListener {
     }
   }
 
-  void stop() {
+  public void stop() {
     if (lightSensor != null) {
       SensorManager sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
       sensorManager.unregisterListener(this);

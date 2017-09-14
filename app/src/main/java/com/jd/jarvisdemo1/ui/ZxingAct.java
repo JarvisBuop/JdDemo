@@ -6,12 +6,16 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.WriterException;
 import com.google.zxing.client.android.CaptureActivity;
+import com.google.zxing.client.android.book.SearchBookContentsActivity;
+import com.google.zxing.client.android.encode.EncodeActivity;
+import com.google.zxing.client.android.share.ShareActivity;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.jd.jarvisdemo1.R;
@@ -24,7 +28,7 @@ import java.util.Map;
  * OverView:
  */
 
-public class ZxingAct extends AppCompatActivity {
+public class ZxingAct extends AppCompatActivity implements View.OnClickListener{
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,7 +36,7 @@ public class ZxingAct extends AppCompatActivity {
         findViewById(R.id.btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                enterQRcode();
+                enterQRcode(CaptureActivity.class);
             }
         });
 
@@ -45,10 +49,18 @@ public class ZxingAct extends AppCompatActivity {
                 }
             }
         });
+        Button btn3 = (Button) findViewById(R.id.btn3);
+        Button btn4 = (Button) findViewById(R.id.btn4);
+        Button btn5 = (Button) findViewById(R.id.btn5);
+        Button btn6 = (Button) findViewById(R.id.btn6);
+        btn3.setOnClickListener(this);
+        btn4.setOnClickListener(this);
+        btn5.setOnClickListener(this);
+        btn6.setOnClickListener(this);
     }
 
-    private void enterQRcode() {
-        startActivity(new Intent(this, CaptureActivity.class));
+    private void enterQRcode(Class newClass) {
+        startActivity(new Intent(this, newClass));
     }
 
     private Bitmap generateBitmap(String content, int width, int height) {
@@ -72,5 +84,23 @@ public class ZxingAct extends AppCompatActivity {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.btn3:
+                enterQRcode(SearchBookContentsActivity.class);
+                break;
+            case R.id.btn4:
+                enterQRcode(EncodeActivity.class);
+                break;
+            case R.id.btn5:
+                enterQRcode(ShareActivity.class);
+                break;
+            case R.id.btn6:
+                enterQRcode(CaptureActivity.class);
+                break;
+        }
     }
 }

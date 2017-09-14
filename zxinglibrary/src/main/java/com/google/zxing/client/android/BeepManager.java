@@ -31,6 +31,7 @@ import java.io.IOException;
 
 /**
  * Manages beeps and vibrations for {@link CaptureActivity}.
+ * @deprecated
  */
 final class BeepManager implements MediaPlayer.OnErrorListener, Closeable {
 

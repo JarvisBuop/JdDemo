@@ -41,6 +41,7 @@ import com.google.zxing.client.android.R;
 
 /**
  * The activity for interacting with the scan history.
+ * @deprecated
  */
 public final class HistoryActivity extends ListActivity {
 

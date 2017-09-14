@@ -28,6 +28,7 @@ import java.util.List;
 
 /**
  * Activity for picking an installed application to share via Intent.
+ * 选择 app 用于分享;
  */
 public final class AppPickerActivity extends ListActivity {
 

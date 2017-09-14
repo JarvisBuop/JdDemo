@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.zxing.client.android;
+package com.google.zxing.client.android.jdRefactor.handler;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
@@ -33,7 +33,10 @@ import android.util.Log;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.DecodeHintType;
 import com.google.zxing.Result;
+import com.google.zxing.client.android.Intents;
+import com.google.zxing.client.android.R;
 import com.google.zxing.client.android.camera.CameraManager;
+import com.google.zxing.client.android.jdRefactor.ui.act.CaptureActivity2;
 
 import java.util.Collection;
 import java.util.Map;
@@ -41,15 +44,14 @@ import java.util.Map;
 /**
  * This class handles all the messaging which comprises the state machine for capture.
  *
- * @author dswitkin@google.com (Daniel Switkin)
- * @deprecated
+ * 处理逻辑类,所有消息统一处理;
  */
-public final class CaptureActivityHandler extends Handler {
+public final class CaptureActivityHandler2 extends Handler {
 
-    private static final String TAG = CaptureActivityHandler.class.getSimpleName();
+    private static final String TAG = CaptureActivityHandler2.class.getSimpleName();
 
-    private final CaptureActivity activity;
-    private final DecodeThread decodeThread;
+    private final CaptureActivity2 activity;
+    private final DecodeThread2 decodeThread;
     private State state;
     private final CameraManager cameraManager;
 
@@ -59,14 +61,14 @@ public final class CaptureActivityHandler extends Handler {
         DONE
     }
 
-    public CaptureActivityHandler(CaptureActivity activity,
-                           Collection<BarcodeFormat> decodeFormats,
-                           Map<DecodeHintType, ?> baseHints,
-                           String characterSet,
-                           CameraManager cameraManager) {
+    CaptureActivityHandler2(CaptureActivity2 activity,
+                            Collection<BarcodeFormat> decodeFormats,
+                            Map<DecodeHintType, ?> baseHints,
+                            String characterSet,
+                            CameraManager cameraManager) {
         this.activity = activity;
-        decodeThread = new DecodeThread(activity, decodeFormats, baseHints, characterSet,
-                new ViewfinderResultPointCallback(activity.getViewfinderView()));
+        decodeThread = new DecodeThread2(activity, decodeFormats, baseHints, characterSet,
+                new ViewfinderResultPointCallback2(activity.getViewfinderView()));
         decodeThread.start();
         state = State.SUCCESS;
 
@@ -86,13 +88,13 @@ public final class CaptureActivityHandler extends Handler {
             Bitmap barcode = null;
             float scaleFactor = 1.0f;
             if (bundle != null) {
-                byte[] compressedBitmap = bundle.getByteArray(DecodeThread.BARCODE_BITMAP);
+                byte[] compressedBitmap = bundle.getByteArray(DecodeThread2.BARCODE_BITMAP);
                 if (compressedBitmap != null) {
                     barcode = BitmapFactory.decodeByteArray(compressedBitmap, 0, compressedBitmap.length, null);
                     // Mutable copy:
                     barcode = barcode.copy(Bitmap.Config.ARGB_8888, true);
                 }
-                scaleFactor = bundle.getFloat(DecodeThread.BARCODE_SCALED_FACTOR);
+                scaleFactor = bundle.getFloat(DecodeThread2.BARCODE_SCALED_FACTOR);
             }
             activity.handleDecode((Result) message.obj, barcode, scaleFactor);
         } else if (message.what == R.id.decode_failed) {

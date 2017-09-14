@@ -25,6 +25,7 @@ import android.webkit.WebView;
  * An HTML-based help screen.
  *
  * @author dswitkin@google.com (Daniel Switkin)
+ * @deprecated
  */
 public final class HelpActivity extends Activity {
 

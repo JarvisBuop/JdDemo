@@ -33,6 +33,7 @@ import com.google.zxing.client.android.Intents;
  * com.android.browser.BrowserBookmarksPage. It can go away if that starts working in the future.
  *
  * @author dswitkin@google.com (Daniel Switkin)
+ * 分享书签;
  */
 public final class BookmarkPickerActivity extends ListActivity {
 

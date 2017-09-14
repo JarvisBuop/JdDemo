@@ -20,6 +20,7 @@ import com.google.zxing.Result;
 
 /**
  * Represents one item in the scan history.
+ * @deprecated
  */
 public final class HistoryItem {
 

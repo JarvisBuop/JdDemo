@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.zxing.client.android;
+package com.google.zxing.client.android.jdRefactor.codehelp;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -30,11 +30,10 @@ import java.util.concurrent.RejectedExecutionException;
 /**
  * Finishes an activity after a period of inactivity if the device is on battery power.
  * 未充电状态,5分钟关闭;
- * @deprecated
  */
-final class InactivityTimer {
+public final class InactivityTimer2 {
 
-  private static final String TAG = InactivityTimer.class.getSimpleName();
+  private static final String TAG = InactivityTimer2.class.getSimpleName();
 
   private static final long INACTIVITY_DELAY_MS = 5 * 60 * 1000L;
 
@@ -43,14 +42,14 @@ final class InactivityTimer {
   private boolean registered;
   private AsyncTask<Object,Object,Object> inactivityTask;
 
-  InactivityTimer(Activity activity) {
+  public InactivityTimer2(Activity activity) {
     this.activity = activity;
     powerStatusReceiver = new PowerStatusReceiver();
     registered = false;
     onActivity();
   }
 
-  synchronized void onActivity() {
+  public synchronized void onActivity() {
     cancel();
     inactivityTask = new InactivityAsyncTask();
     try {
@@ -60,7 +59,7 @@ final class InactivityTimer {
     }
   }
 
-  synchronized void onPause() {
+  public synchronized void onPause() {
     cancel();
     if (registered) {
       activity.unregisterReceiver(powerStatusReceiver);
@@ -70,7 +69,7 @@ final class InactivityTimer {
     }
   }
 
-  synchronized void onResume() {
+  public synchronized void onResume() {
     if (registered) {
       Log.w(TAG, "PowerStatusReceiver was already registered?");
     } else {
@@ -88,7 +87,7 @@ final class InactivityTimer {
     }
   }
 
-  void shutdown() {
+  public void shutdown() {
     cancel();
   }
 
@@ -99,9 +98,9 @@ final class InactivityTimer {
         // 0 indicates that we're on battery
         boolean onBatteryNow = intent.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1) <= 0;
         if (onBatteryNow) {
-          InactivityTimer.this.onActivity();
+          InactivityTimer2.this.onActivity();
         } else {
-          InactivityTimer.this.cancel();
+          InactivityTimer2.this.cancel();
         }
       }
     }

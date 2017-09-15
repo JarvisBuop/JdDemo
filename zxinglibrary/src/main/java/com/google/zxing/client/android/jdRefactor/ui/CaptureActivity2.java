@@ -26,7 +26,6 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -35,6 +34,7 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,7 +44,6 @@ import com.google.zxing.Result;
 import com.google.zxing.ResultMetadataType;
 import com.google.zxing.ResultPoint;
 import com.google.zxing.client.android.FinishListener;
-import com.google.zxing.client.android.Intents;
 import com.google.zxing.client.android.R;
 import com.google.zxing.client.android.ViewfinderView;
 import com.google.zxing.client.android.camera.CameraManager;
@@ -55,6 +54,7 @@ import com.google.zxing.client.android.jdRefactor.codehelp.InactivityTimer2;
 import com.google.zxing.client.android.jdRefactor.handler.CaptureActivityHandler2;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumSet;
 import java.util.Map;
@@ -78,12 +78,11 @@ import static com.google.zxing.client.android.jdRefactor.controller.JdCodeParams
 public final class CaptureActivity2 extends Activity implements SurfaceHolder.Callback {
 
     private static final String TAG = CaptureActivity2.class.getSimpleName();
+    public static final String REQUEST_CODE_LIST = "CAPTURE_LIST";
+    public static final String REQUEST_CODE_META = "CAPTURE_META";
+    public static final String REQUEST_CODE_FORMAT = "CAPTURE_FORMAT";
 
-    private static final long DEFAULT_INTENT_RESULT_DURATION_MS = 1500L;
     private static final long BULK_MODE_SCAN_DELAY_MS = 1000L;
-    private static final String[] ZXING_URLS = {"http://zxing.appspot.com/scan", "zxing://scan/"};
-
-    private static final int HISTORY_REQUEST_CODE = 0x0000bacc;
 
     private static final Collection<ResultMetadataType> DISPLAYABLE_METADATA_TYPES =
             EnumSet.of(ResultMetadataType.ISSUE_NUMBER,
@@ -105,6 +104,10 @@ public final class CaptureActivity2 extends Activity implements SurfaceHolder.Ca
     private InactivityTimer2 inactivityTimer2;
     private BeepManager2 beepManager;
     private AmbientLightManager2 ambientLightManager;
+
+    private ImageView imageView;
+    private ArrayList<Result> mMultiResultList;
+
 
     public ViewfinderView getViewfinderView() {
         return viewfinderView;
@@ -131,7 +134,6 @@ public final class CaptureActivity2 extends Activity implements SurfaceHolder.Ca
         beepManager = new BeepManager2(this);
         ambientLightManager = new AmbientLightManager2(this);
 
-        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
     }
 
     @Override
@@ -147,6 +149,7 @@ public final class CaptureActivity2 extends Activity implements SurfaceHolder.Ca
         viewfinderView.setCameraManager(cameraManager);
 
         statusView = (TextView) findViewById(R.id.status_view);//底部文字;
+        imageView = (ImageView) findViewById(R.id.image_multi);
 
         handler = null;
         lastResult = null;
@@ -162,6 +165,24 @@ public final class CaptureActivity2 extends Activity implements SurfaceHolder.Ca
         } else {
             // Install the callback and wait for surfaceCreated() to init the camera.
             surfaceHolder.addCallback(this);
+        }
+
+        initAct();
+    }
+
+    private void initAct() {
+        imageView.setVisibility(ISMULTI_SCANMODE?View.VISIBLE:View.GONE);
+        if(ISMULTI_SCANMODE){
+            mMultiResultList = new ArrayList<>();
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent();
+                    intent.putExtra(REQUEST_CODE_LIST,mMultiResultList);
+                    setResult(RESULT_OK,intent);
+                    finish();
+                }
+            });
         }
     }
 
@@ -183,7 +204,7 @@ public final class CaptureActivity2 extends Activity implements SurfaceHolder.Ca
 
         Intent intent = getIntent();
 
-        copyToClipboard = COPY_2_CLIPBOARD && (intent == null || intent.getBooleanExtra(Intents.Scan.SAVE_HISTORY, true));
+        copyToClipboard = COPY_2_CLIPBOARD;
 
 //        decodeFormats = DecodeFormatManager2.getAllFormat(null);//刚开始扫描肯定没有初始化;
         decodeFormats = null;//刚开始扫描肯定没有初始化;
@@ -289,7 +310,7 @@ public final class CaptureActivity2 extends Activity implements SurfaceHolder.Ca
 
     /**
      * A valid barcode has been found, so give an indication of success and show the results.
-     *
+     * 解码成功回调的方法
      * @param rawResult   The contents of the barcode.
      * @param scaleFactor amount by which thumbnail was scaled
      * @param barcode     A greyscale bitmap of the camera data which was decoded.
@@ -314,35 +335,27 @@ public final class CaptureActivity2 extends Activity implements SurfaceHolder.Ca
                 Log.e("jarvismap", entry.getKey().toString() + "/" + entry.getValue().toString());
             }
         }
-        // TODO: 2017/9/15 复制到粘贴板;
-        if (rawResult != null) maybeSetClipboard(rawResult.getText());
+
         //  TODO: 2017/9/15 批量扫描模式;
         if (fromLiveScan && ISMULTI_SCANMODE) {
             Toast.makeText(getApplicationContext(),
                     getResources().getString(R.string.msg_bulk_mode_scanned) + " (" + rawResult.getText() + ')',
                     Toast.LENGTH_SHORT).show();
-
+            mMultiResultList.add(rawResult);
             // Wait a moment or else it will scan the same barcode continuously about 3 times
             restartPreviewAfterDelay(BULK_MODE_SCAN_DELAY_MS);
         }
-// TODO: 2017/9/15 元数据
-        Map<ResultMetadataType, Object> metadata = rawResult.getResultMetadata();
-        if (metadata != null) {
-            StringBuilder metadataText = new StringBuilder(20);
-            for (Map.Entry<ResultMetadataType, Object> entry : metadata.entrySet()) {
-                if (DISPLAYABLE_METADATA_TYPES.contains(entry.getKey())) {
-                    Log.e("jarvis", entry.getValue().toString());
-                    metadataText.append(entry.getValue()).append('\n');
-                }
-            }
-        }
-
-//        if (barcode != null) {
-//            viewfinderView.drawResultBitmap(barcode);
-//        }
+        // TODO: 2017/9/15 复制到粘贴板;
+        if (rawResult != null) maybeSetClipboard(rawResult.getText());
 
         //TODO 回调处理;
-
+        if(!ISMULTI_SCANMODE){
+            Intent intent = new Intent();
+            intent.putExtra(REQUEST_CODE_META,rawResult.getText());
+            intent.putExtra(REQUEST_CODE_FORMAT,rawResult.getBarcodeFormat());
+            setResult(RESULT_OK,intent);
+            finish();
+        }
     }
 
     /**

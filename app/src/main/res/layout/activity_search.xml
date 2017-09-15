@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#fff"
+    tools:context="com.jd.jarvisdemo1.ui.MainActivity">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hello World!"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.051"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.032" />
+
+    <View
+        android:id="@+id/line1"
+        style="@style/horizontal_line"
+        android:layout_width="0dp"
+        android:layout_height="0dp" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:id="@+id/ll_sear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/txt_detail"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:background="#8f3ff3"
+            android:gravity="left|center_vertical"
+            android:text="title" />
+
+        <android.support.v7.widget.SearchView
+            android:id="@+id/searchview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            app:searchIcon="@mipmap/ic_launcher_round"
+            android:background="@drawable/search_edit_bg"
+            app:iconifiedByDefault="true"
+            app:queryBackground="@null"
+            app:queryHint="搜索" />
+    </LinearLayout>
+
+    <android.support.v7.widget.SearchView
+        android:id="@+id/searchview2"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_margin="5dp"
+        android:background="@drawable/search_edit_bg"
+        app:iconifiedByDefault="false"
+        app:voiceIcon="@mipmap/ic_help"
+        app:queryBackground="@null"
+        app:submitBackground="@null"
+        app:queryHint="搜索" />
+
+    <!--app:goIcon="@mipmap/ic_arrow_right_black"-->
+
+    <View
+        android:id="@+id/line2"
+        style="@style/horizontal_line"
+        android:layout_marginTop="5dp"
+        android:layout_height="0dp"
+        android:layout_width="0dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="2dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal" >
+
+    <TextView
+        android:text="打开语音"
+        android:id="@+id/txt_submit_voice"
+        android:background="@color/btn_permit"
+        android:padding="10dp"
+        android:textColor="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+
+
+</LinearLayout>

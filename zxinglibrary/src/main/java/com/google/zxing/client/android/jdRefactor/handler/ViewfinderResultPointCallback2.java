@@ -22,15 +22,15 @@ import com.google.zxing.client.android.ViewfinderView;
 
 final class ViewfinderResultPointCallback2 implements ResultPointCallback {
 
-  private final ViewfinderView viewfinderView;
+    private final ViewfinderView viewfinderView;
 
-  ViewfinderResultPointCallback2(ViewfinderView viewfinderView) {
-    this.viewfinderView = viewfinderView;
-  }
+    ViewfinderResultPointCallback2(ViewfinderView viewfinderView) {
+        this.viewfinderView = viewfinderView;
+    }
 
-  @Override
-  public void foundPossibleResultPoint(ResultPoint point) {
-    viewfinderView.addPossibleResultPoint(point);
-  }
+    @Override
+    public void foundPossibleResultPoint(ResultPoint point) {
+        viewfinderView.addPossibleResultPoint(point);
+    }
 
 }

@@ -30,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initData() {
+        mDataList.add(new IntentData("测试searchview",R.mipmap.ic_help,SearchAct.class));
+        mDataList.add(new IntentData("测试二维码 zxing",R.mipmap.ic_help,ZxingAct.class));
 
         mAdapter.notifyDataSetChanged();
     }

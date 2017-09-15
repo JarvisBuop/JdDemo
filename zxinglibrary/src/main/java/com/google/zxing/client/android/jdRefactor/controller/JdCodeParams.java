@@ -4,7 +4,7 @@ import com.google.zxing.client.android.jdRefactor.statusmode.FrontLightMode2;
 
 /**
  * Created by JarvisDong on 2017/9/14.
- * OverView:
+ * OverView: 扫描配置类
  */
 
 public class JdCodeParams {

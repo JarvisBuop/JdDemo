@@ -16,11 +16,6 @@
 
 package com.google.zxing.client.android;
 
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.regex.Pattern;
-
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -28,10 +23,16 @@ import android.util.Log;
 
 import com.google.zxing.DecodeHintType;
 
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Pattern;
+
 /**
  * @author Lachezar Dobrev
+ * 分离功能类;(暂保留;)
  */
-final class DecodeHintManager {
+public final class DecodeHintManager {
   
   private static final String TAG = DecodeHintManager.class.getSimpleName();
 
@@ -114,7 +115,7 @@ final class DecodeHintManager {
     return map;
   }
 
-  static Map<DecodeHintType,?> parseDecodeHints(Uri inputUri) {
+  public static Map<DecodeHintType,?> parseDecodeHints(Uri inputUri) {
     String query = inputUri.getEncodedQuery();
     if (query == null || query.isEmpty()) {
       return null;
@@ -198,7 +199,7 @@ final class DecodeHintManager {
     return hints;
   }
 
-  static Map<DecodeHintType, Object> parseDecodeHints(Intent intent) {
+  public static Map<DecodeHintType, Object> parseDecodeHints(Intent intent) {
     Bundle extras = intent.getExtras();
     if (extras == null || extras.isEmpty()) {
       return null;

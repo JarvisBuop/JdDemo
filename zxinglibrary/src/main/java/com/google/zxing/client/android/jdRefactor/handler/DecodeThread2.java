@@ -25,7 +25,7 @@ import com.google.zxing.DecodeHintType;
 import com.google.zxing.ResultPointCallback;
 import com.google.zxing.client.android.jdRefactor.codehelp.DecodeFormatManager2;
 import com.google.zxing.client.android.jdRefactor.controller.JdCodeParams;
-import com.google.zxing.client.android.jdRefactor.ui.act.CaptureActivity2;
+import com.google.zxing.client.android.jdRefactor.ui.CaptureActivity2;
 
 import java.util.Collection;
 import java.util.EnumMap;

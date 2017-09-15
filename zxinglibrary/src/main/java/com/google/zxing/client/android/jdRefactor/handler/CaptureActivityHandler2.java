@@ -36,7 +36,7 @@ import com.google.zxing.Result;
 import com.google.zxing.client.android.Intents;
 import com.google.zxing.client.android.R;
 import com.google.zxing.client.android.camera.CameraManager;
-import com.google.zxing.client.android.jdRefactor.ui.act.CaptureActivity2;
+import com.google.zxing.client.android.jdRefactor.ui.CaptureActivity2;
 
 import java.util.Collection;
 import java.util.Map;
@@ -75,7 +75,7 @@ public final class CaptureActivityHandler2 extends Handler {
         // Start ourselves capturing previews and decoding.
         this.cameraManager = cameraManager;
         cameraManager.startPreview();
-        restartPreviewAndDecode();
+        restartPreviewAndDecode();//扫描;
     }
 
     @Override
@@ -84,17 +84,17 @@ public final class CaptureActivityHandler2 extends Handler {
             restartPreviewAndDecode();
         } else if (message.what == R.id.decode_succeeded) {
             state = State.SUCCESS;
-            Bundle bundle = message.getData();
+            Bundle bundle = message.getData();//message 为 result 信息;
             Bitmap barcode = null;
             float scaleFactor = 1.0f;
             if (bundle != null) {
-                byte[] compressedBitmap = bundle.getByteArray(DecodeThread2.BARCODE_BITMAP);
+                byte[] compressedBitmap = bundle.getByteArray(DecodeThread2.BARCODE_BITMAP);//图片的缩略图;
                 if (compressedBitmap != null) {
                     barcode = BitmapFactory.decodeByteArray(compressedBitmap, 0, compressedBitmap.length, null);
                     // Mutable copy:
                     barcode = barcode.copy(Bitmap.Config.ARGB_8888, true);
                 }
-                scaleFactor = bundle.getFloat(DecodeThread2.BARCODE_SCALED_FACTOR);
+                scaleFactor = bundle.getFloat(DecodeThread2.BARCODE_SCALED_FACTOR);//放缩因子;
             }
             activity.handleDecode((Result) message.obj, barcode, scaleFactor);
         } else if (message.what == R.id.decode_failed) {

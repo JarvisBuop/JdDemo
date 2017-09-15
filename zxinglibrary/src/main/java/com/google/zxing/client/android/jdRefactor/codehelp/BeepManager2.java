@@ -18,16 +18,11 @@ package com.google.zxing.client.android.jdRefactor.codehelp;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.res.AssetFileDescriptor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Vibrator;
-import android.preference.PreferenceManager;
 import android.util.Log;
-
-import com.google.zxing.client.android.CaptureActivity;
-import com.google.zxing.client.android.PreferencesActivity;
 import com.google.zxing.client.android.R;
 
 import java.io.Closeable;
@@ -37,7 +32,7 @@ import static com.google.zxing.client.android.jdRefactor.controller.JdCodeParams
 import static com.google.zxing.client.android.jdRefactor.controller.JdCodeParams.PLAY_VIBRATOR;
 
 /**
- * Manages beeps and vibrations for {@link CaptureActivity}.
+ * Manages beeps and vibrations for {@link}.
  * 扫秒成功,播放声音;
  */
 public final class BeepManager2 implements MediaPlayer.OnErrorListener, Closeable {

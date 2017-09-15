@@ -51,7 +51,7 @@ public final class ShareActivity extends Activity {
   private static final int PICK_APP = 2;
 
   private View clipboardButton;
-
+  // TODO: 2017/9/15 联系人
   private final View.OnClickListener contactListener = new View.OnClickListener() {
     @Override
     public void onClick(View v) {
@@ -60,7 +60,7 @@ public final class ShareActivity extends Activity {
       startActivityForResult(intent, PICK_CONTACT);
     }
   };
-
+  // TODO: 2017/9/15 分享书签'
   private final View.OnClickListener bookmarkListener = new View.OnClickListener() {
     @Override
     public void onClick(View v) {
@@ -71,6 +71,7 @@ public final class ShareActivity extends Activity {
     }
   };
 
+  // TODO: 2017/9/15 分享应用;
   private final View.OnClickListener appListener = new View.OnClickListener() {
     @Override
     public void onClick(View v) {
@@ -80,7 +81,7 @@ public final class ShareActivity extends Activity {
       startActivityForResult(intent, PICK_APP);
     }
   };
-
+  // TODO: 2017/9/15 粘贴板
   private final View.OnClickListener clipboardListener = new View.OnClickListener() {
     @Override
     public void onClick(View v) {

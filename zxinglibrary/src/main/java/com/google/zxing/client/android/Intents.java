@@ -231,28 +231,28 @@ public final class Intents {
     }
   }
 
-  /**
-   * Constants related to the {@link SearchBookContents#ACTION} Intent.
-   */
-  public static final class SearchBookContents {
-    /**
-     * Use Google Book Search to search the contents of the book provided.
-     */
-    public static final String ACTION = "com.google.zxing.client.android.SEARCH_BOOK_CONTENTS";
-
-    /**
-     * The book to search, identified by ISBN number.
-     */
-    public static final String ISBN = "ISBN";
-
-    /**
-     * An optional field which is the text to search for.
-     */
-    public static final String QUERY = "QUERY";
-
-    private SearchBookContents() {
-    }
-  }
+//  /**
+//   * Constants related to the {@link SearchBookContents#ACTION} Intent.
+//   */
+//  public static final class SearchBookContents {
+//    /**
+//     * Use Google Book Search to search the contents of the book provided.
+//     */
+//    public static final String ACTION = "com.google.zxing.client.android.SEARCH_BOOK_CONTENTS";
+//
+//    /**
+//     * The book to search, identified by ISBN number.
+//     */
+//    public static final String ISBN = "ISBN";
+//
+//    /**
+//     * An optional field which is the text to search for.
+//     */
+//    public static final String QUERY = "QUERY";
+//
+//    private SearchBookContents() {
+//    }
+//  }
 
   /**
    * Constants related to the {@link WifiConnect#ACTION} Intent.

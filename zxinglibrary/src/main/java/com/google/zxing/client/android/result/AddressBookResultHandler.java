@@ -16,15 +16,15 @@
 
 package com.google.zxing.client.android.result;
 
-import com.google.zxing.client.android.R;
-import com.google.zxing.client.result.AddressBookParsedResult;
-import com.google.zxing.client.result.ParsedResult;
-
 import android.app.Activity;
 import android.graphics.Typeface;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
+
+import com.google.zxing.client.android.R;
+import com.google.zxing.client.result.AddressBookParsedResult;
+import com.google.zxing.client.result.ParsedResult;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -35,6 +35,8 @@ import java.util.Locale;
  * Handles address book entries.
  *
  * @author dswitkin@google.com (Daniel Switkin)
+ * 联系人信息
+ *
  */
 public final class AddressBookResultHandler extends ResultHandler {
 

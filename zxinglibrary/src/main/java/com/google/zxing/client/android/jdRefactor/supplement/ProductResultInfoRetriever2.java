@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package com.google.zxing.client.android.result.supplement;
+package com.google.zxing.client.android.jdRefactor.supplement;
 
 import android.content.Context;
 import android.text.Html;
 import android.widget.TextView;
+
 import com.google.zxing.client.android.HttpHelper;
-import com.google.zxing.client.android.R;
-import com.google.zxing.client.android.history.HistoryManager;
 import com.google.zxing.client.android.LocaleManager;
+import com.google.zxing.client.android.R;
 
 import java.io.IOException;
 import java.net.URLEncoder;
@@ -37,7 +37,7 @@ import java.util.regex.Pattern;
  *
  * @author Sean Owen
  */
-final class ProductResultInfoRetriever extends SupplementalInfoRetriever {
+final class ProductResultInfoRetriever2 extends SupplementalInfoRetriever2 {
 
   private static final Pattern[] PRODUCT_NAME_PRICE_PATTERNS = {
     Pattern.compile(",event\\)\">([^<]+)</a></h3>.+<span class=psrp>([^<]+)</span>"),
@@ -48,8 +48,8 @@ final class ProductResultInfoRetriever extends SupplementalInfoRetriever {
   private final String source;
   private final Context context;
 
-  ProductResultInfoRetriever(TextView textView, String productID, HistoryManager historyManager, Context context) {
-    super(textView, historyManager);
+  ProductResultInfoRetriever2(TextView textView, String productID, Context context) {
+    super(textView);
     this.productID = productID;
     this.source = context.getString(R.string.msg_google_product);
     this.context = context;

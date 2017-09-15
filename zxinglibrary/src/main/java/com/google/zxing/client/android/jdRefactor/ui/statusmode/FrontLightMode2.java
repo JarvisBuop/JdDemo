@@ -35,7 +35,7 @@ public enum FrontLightMode2 {
   }
 
   public static FrontLightMode2 readPref() {
-    return parse(ISUSEFLASH);
+    return parse(ISUSEFLASH.toString());
   }
 
 }

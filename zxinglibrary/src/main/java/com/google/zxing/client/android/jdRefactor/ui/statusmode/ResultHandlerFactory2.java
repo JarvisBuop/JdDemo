@@ -22,13 +22,9 @@ import com.google.zxing.client.android.result.AddressBookResultHandler;
 import com.google.zxing.client.android.result.CalendarResultHandler;
 import com.google.zxing.client.android.result.EmailAddressResultHandler;
 import com.google.zxing.client.android.result.GeoResultHandler;
-import com.google.zxing.client.android.result.ISBNResultHandler;
-import com.google.zxing.client.android.result.ProductResultHandler;
 import com.google.zxing.client.android.result.ResultHandler;
 import com.google.zxing.client.android.result.SMSResultHandler;
 import com.google.zxing.client.android.result.TelResultHandler;
-import com.google.zxing.client.android.result.TextResultHandler;
-import com.google.zxing.client.android.result.URIResultHandler;
 import com.google.zxing.client.result.ParsedResult;
 import com.google.zxing.client.result.ResultParser;
 
@@ -48,12 +44,10 @@ public final class ResultHandlerFactory2 {
         return new AddressBookResultHandler(activity, result);
       case EMAIL_ADDRESS:
         return new EmailAddressResultHandler(activity, result);
-      case PRODUCT:
-        return new ProductResultHandler(activity, result, rawResult);
-      case URI:
-        return new URIResultHandler(activity, result);
-      case WIFI:
-//        return new WifiResultHandler(activity, result);
+//      case PRODUCT:
+//        return new ProductResultHandler(activity, result, rawResult);
+//      case URI:
+//        return new URIResultHandler(activity, result);
       case GEO:
         return new GeoResultHandler(activity, result);
       case TEL:
@@ -62,10 +56,9 @@ public final class ResultHandlerFactory2 {
         return new SMSResultHandler(activity, result);
       case CALENDAR:
         return new CalendarResultHandler(activity, result);
-      case ISBN:
-        return new ISBNResultHandler(activity, result, rawResult);
       default:
-        return new TextResultHandler(activity, result, rawResult);
+//        return new TextResultHandler(activity, result, rawResult);
+        return null;
     }
   }
 

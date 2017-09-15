@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package com.google.zxing.client.android.result.supplement;
+package com.google.zxing.client.android.jdRefactor.supplement;
 
 import android.text.Html;
 import android.widget.TextView;
+
 import com.google.zxing.client.android.HttpHelper;
-import com.google.zxing.client.android.history.HistoryManager;
 import com.google.zxing.client.result.URIParsedResult;
 
 import java.io.IOException;
@@ -31,15 +31,15 @@ import java.util.regex.Pattern;
  *
  * @author Sean Owen
  */
-final class TitleRetriever extends SupplementalInfoRetriever {
+final class TitleRetriever2 extends SupplementalInfoRetriever2 {
 
   private static final Pattern TITLE_PATTERN = Pattern.compile("<title>([^<]+)");
   private static final int MAX_TITLE_LEN = 100;
 
   private final String httpUrl;
 
-  TitleRetriever(TextView textView, URIParsedResult result, HistoryManager historyManager) {
-    super(textView, historyManager);
+  TitleRetriever2(TextView textView, URIParsedResult result) {
+    super(textView);
     this.httpUrl = result.getURI();
   }
 

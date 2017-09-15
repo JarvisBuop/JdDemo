@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.zxing.client.android.result.supplement;
+package com.google.zxing.client.android.jdRefactor.supplement;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -26,56 +26,54 @@ import android.text.style.URLSpan;
 import android.util.Log;
 import android.widget.TextView;
 
+import com.google.zxing.client.result.ISBNParsedResult;
+import com.google.zxing.client.result.ParsedResult;
+import com.google.zxing.client.result.ProductParsedResult;
+import com.google.zxing.client.result.URIParsedResult;
+
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.concurrent.RejectedExecutionException;
 
-import com.google.zxing.client.android.history.HistoryManager;
-import com.google.zxing.client.result.ISBNParsedResult;
-import com.google.zxing.client.result.ParsedResult;
-import com.google.zxing.client.result.ProductParsedResult;
-import com.google.zxing.client.result.URIParsedResult;
-
 /**
  * Superclass of implementations which can asynchronously retrieve more information
  * about a barcode scan.
  */
-public abstract class SupplementalInfoRetriever extends AsyncTask<Object,Object,Object> {
+public abstract class SupplementalInfoRetriever2 extends AsyncTask<Object,Object,Object> {
 
   private static final String TAG = "SupplementalInfo";
 
   private final WeakReference<TextView> textViewRef;
-  private final WeakReference<HistoryManager> historyManagerRef;
+//  private final WeakReference<HistoryManager> historyManagerRef;
   private final Collection<Spannable> newContents;
   private final Collection<String[]> newHistories;
 
   public static void maybeInvokeRetrieval(TextView textView,
                                           ParsedResult result,
-                                          HistoryManager historyManager,
                                           Context context) {
     try {
       if (result instanceof URIParsedResult) {
-        SupplementalInfoRetriever uriRetriever =
-            new URIResultInfoRetriever(textView, (URIParsedResult) result, historyManager, context);
+        SupplementalInfoRetriever2 uriRetriever =
+            new URIResultInfoRetriever2(textView, (URIParsedResult) result, context);
         uriRetriever.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        SupplementalInfoRetriever titleRetriever =
-            new TitleRetriever(textView, (URIParsedResult) result, historyManager);
+        SupplementalInfoRetriever2 titleRetriever =
+            new TitleRetriever2(textView, (URIParsedResult) result);
         titleRetriever.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
       } else if (result instanceof ProductParsedResult) {
         ProductParsedResult productParsedResult = (ProductParsedResult) result;
         String productID = productParsedResult.getProductID();
-        SupplementalInfoRetriever productRetriever =
-            new ProductResultInfoRetriever(textView, productID, historyManager, context);
+        SupplementalInfoRetriever2 productRetriever =
+            new ProductResultInfoRetriever2(textView, productID, context);
         productRetriever.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
       } else if (result instanceof ISBNParsedResult) {
         String isbn = ((ISBNParsedResult) result).getISBN();
-        SupplementalInfoRetriever productInfoRetriever =
-            new ProductResultInfoRetriever(textView, isbn, historyManager, context);
+        SupplementalInfoRetriever2 productInfoRetriever =
+            new ProductResultInfoRetriever2(textView, isbn, context);
         productInfoRetriever.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        SupplementalInfoRetriever bookInfoRetriever =
-            new BookResultInfoRetriever(textView, isbn, historyManager, context);
+        SupplementalInfoRetriever2 bookInfoRetriever =
+            new BookResultInfoRetriever2(textView, isbn, context);
         bookInfoRetriever.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
       }
     } catch (RejectedExecutionException ree) {
@@ -83,9 +81,9 @@ public abstract class SupplementalInfoRetriever extends AsyncTask<Object,Object,
     }
   }
 
-  SupplementalInfoRetriever(TextView textView, HistoryManager historyManager) {
+  SupplementalInfoRetriever2(TextView textView) {
     textViewRef = new WeakReference<>(textView);
-    historyManagerRef = new WeakReference<>(historyManager);
+//    historyManagerRef = new WeakReference<>(historyManager);
     newContents = new ArrayList<>();
     newHistories = new ArrayList<>();
   }
@@ -109,12 +107,12 @@ public abstract class SupplementalInfoRetriever extends AsyncTask<Object,Object,
       }
       textView.setMovementMethod(LinkMovementMethod.getInstance());
     }
-    HistoryManager historyManager = historyManagerRef.get();
-    if (historyManager != null) {
-      for (String[] text : newHistories) {
-        historyManager.addHistoryItemDetails(text[0], text[1]);
-      }
-    }
+//    HistoryManager historyManager = historyManagerRef.get();
+//    if (historyManager != null) {
+//      for (String[] text : newHistories) {
+//        historyManager.addHistoryItemDetails(text[0], text[1]);
+//      }
+//    }
   }
 
   abstract void retrieveSupplementalInfo() throws IOException;

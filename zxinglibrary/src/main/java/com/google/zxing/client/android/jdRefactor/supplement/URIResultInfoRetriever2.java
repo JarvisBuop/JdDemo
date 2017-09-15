@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package com.google.zxing.client.android.result.supplement;
+package com.google.zxing.client.android.jdRefactor.supplement;
 
 import android.content.Context;
 import android.widget.TextView;
+
 import com.google.zxing.client.android.HttpHelper;
-import com.google.zxing.client.android.history.HistoryManager;
 import com.google.zxing.client.android.R;
 import com.google.zxing.client.result.URIParsedResult;
 
@@ -27,15 +27,15 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-final class URIResultInfoRetriever extends SupplementalInfoRetriever {
+final class URIResultInfoRetriever2 extends SupplementalInfoRetriever2 {
 
   private static final int MAX_REDIRECTS = 5;
 
   private final URIParsedResult result;
   private final String redirectString;
 
-  URIResultInfoRetriever(TextView textView, URIParsedResult result, HistoryManager historyManager, Context context) {
-    super(textView, historyManager);
+  URIResultInfoRetriever2(TextView textView, URIParsedResult result, Context context) {
+    super(textView);
     redirectString = context.getString(R.string.msg_redirect);
     this.result = result;
   }

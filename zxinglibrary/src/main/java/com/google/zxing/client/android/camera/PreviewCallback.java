@@ -22,6 +22,10 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
+/**
+ * 这里才是真正的处理好发送消息的方法
+ * 用 handler 对象发送相应的消息
+ */
 @SuppressWarnings("deprecation") // camera APIs
 final class PreviewCallback implements Camera.PreviewCallback {
 

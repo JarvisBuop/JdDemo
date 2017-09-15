@@ -62,15 +62,14 @@ import com.google.zxing.client.android.jdRefactor.codehelp.InactivityTimer2;
 import com.google.zxing.client.android.jdRefactor.controller.JdCodeParams;
 import com.google.zxing.client.android.jdRefactor.handler.CaptureActivityHandler2;
 import com.google.zxing.client.android.jdRefactor.ui.statusmode.ResultHandlerFactory2;
-import com.google.zxing.client.android.result.ResultButtonListener;
 import com.google.zxing.client.android.result.ResultHandler;
-import com.google.zxing.client.android.result.supplement.SupplementalInfoRetriever;
 
 import java.io.IOException;
 import java.text.DateFormat;
 import java.util.Collection;
 import java.util.EnumSet;
 import java.util.Map;
+import java.util.Set;
 
 import static com.google.zxing.client.android.jdRefactor.controller.JdCodeParams.COPY_2_CLIPBOARD;
 
@@ -105,9 +104,9 @@ public final class CaptureActivity2 extends Activity implements SurfaceHolder.Ca
     private Result lastResult;
     private boolean hasSurface;
     private boolean copyToClipboard;
-        private Collection<BarcodeFormat> decodeFormats;
+    private Collection<BarcodeFormat> decodeFormats;
     private Map<DecodeHintType, ?> decodeHints;
-        private String characterSet;
+    private String characterSet;
     private InactivityTimer2 inactivityTimer2;
     private BeepManager2 beepManager;
     private AmbientLightManager2 ambientLightManager;
@@ -354,6 +353,7 @@ public final class CaptureActivity2 extends Activity implements SurfaceHolder.Ca
 //        Intent intent = new Intent(Intent.ACTION_VIEW);
 //        intent.addFlags(Intents.FLAG_NEW_DOC);
 //        if (item.getItemId() == R.id.menu_share) {
+    //// TODO: 2017/9/15 生成二维码
 //            intent.setClassName(this, ShareActivity.class.getName());
 //            startActivity(intent);
 //        } else if (item.getItemId() == R.id.menu_history) {
@@ -414,6 +414,7 @@ public final class CaptureActivity2 extends Activity implements SurfaceHolder.Ca
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
         hasSurface = false;
+
     }
 
     @Override
@@ -440,7 +441,15 @@ public final class CaptureActivity2 extends Activity implements SurfaceHolder.Ca
             beepManager.playBeepSoundAndVibrate();
             drawResultPoints(barcode, scaleFactor, rawResult);
         }
-
+         Log.e("jarvis",rawResult.toString()+"\n"+barcode.toString()+"\n"+scaleFactor);
+         Log.e("jarvis",rawResult.getText()+"/"+rawResult.getBarcodeFormat()+"/"+rawResult.getNumBits());
+        Map<ResultMetadataType, Object> resultMetadata = rawResult.getResultMetadata();
+        if(resultMetadata!=null){
+            Set<Map.Entry<ResultMetadataType, Object>> entries = resultMetadata.entrySet();
+            for(Map.Entry<ResultMetadataType, Object> entry:entries){
+                Log.e("jarvismap",entry.getKey().toString()+"/"+entry.getValue().toString());
+            }
+        }
         //处理扫描后的文字;
 //        switch (source) {
 //            case NATIVE_APP_INTENT:
@@ -456,6 +465,7 @@ public final class CaptureActivity2 extends Activity implements SurfaceHolder.Ca
 //                break;
 //            case NONE:
 //                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        // TODO: 2017/9/15 批量扫描模式;
 //                if (fromLiveScan && prefs.getBoolean(PreferencesActivity.KEY_BULK_MODE, false)) {
 //                    Toast.makeText(getApplicationContext(),
 //                            getResources().getString(R.string.msg_bulk_mode_scanned) + " (" + rawResult.getText() + ')',
@@ -528,7 +538,7 @@ public final class CaptureActivity2 extends Activity implements SurfaceHolder.Ca
         statusView.setVisibility(View.GONE);
         viewfinderView.setVisibility(View.GONE);
 //        resultView.setVisibility(View.VISIBLE);
-
+        // TODO: 2017/9/15 图片
 //        ImageView barcodeImageView = (ImageView) findViewById(R.id.barcode_image_view);
 //        if (barcode == null) {
 //            barcodeImageView.setImageBitmap(BitmapFactory.decodeResource(getResources(),
@@ -536,22 +546,24 @@ public final class CaptureActivity2 extends Activity implements SurfaceHolder.Ca
 //        } else {
 //            barcodeImageView.setImageBitmap(barcode);
 //        }
-
+        //// TODO: 2017/9/15 码类型
 //        TextView formatTextView = (TextView) findViewById(R.id.format_text_view);
 //        formatTextView.setText(rawResult.getBarcodeFormat().toString());
-
+        // TODO: 2017/9/15 type
 //        TextView typeTextView = (TextView) findViewById(R.id.type_text_view);
 //        typeTextView.setText(resultHandler.getType().toString());
 
         DateFormat formatter = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
+        // TODO: 2017/9/15 时间
 //        TextView timeTextView = (TextView) findViewById(R.id.time_text_view);
 //        timeTextView.setText(formatter.format(rawResult.getTimestamp()));
 
-
+// TODO: 2017/9/15 元数据;
 //        TextView metaTextView = (TextView) findViewById(R.id.meta_text_view);
+        //// TODO: 2017/9/15 label
 //        View metaTextViewLabel = findViewById(R.id.meta_text_view_label);
-        metaTextView.setVisibility(View.GONE);
-        metaTextViewLabel.setVisibility(View.GONE);
+//        metaTextView.setVisibility(View.GONE);
+//        metaTextViewLabel.setVisibility(View.GONE);
         Map<ResultMetadataType, Object> metadata = rawResult.getResultMetadata();
         if (metadata != null) {
             StringBuilder metadataText = new StringBuilder(20);
@@ -561,44 +573,46 @@ public final class CaptureActivity2 extends Activity implements SurfaceHolder.Ca
                     metadataText.append(entry.getValue()).append('\n');
                 }
             }
-            if (metadataText.length() > 0) {
-                metadataText.setLength(metadataText.length() - 1);
-                metaTextView.setText(metadataText);
-                metaTextView.setVisibility(View.VISIBLE);
-                metaTextViewLabel.setVisibility(View.VISIBLE);
-            }
+//            if (metadataText.length() > 0) {
+//                metadataText.setLength(metadataText.length() - 1);
+//                metaTextView.setText(metadataText);
+//                metaTextView.setVisibility(View.VISIBLE);
+//                metaTextViewLabel.setVisibility(View.VISIBLE);
+//            }
         }
 
         CharSequence displayContents = resultHandler.getDisplayContents();
-        TextView contentsTextView = (TextView) findViewById(R.id.contents_text_view);
-        contentsTextView.setText(displayContents);
-        int scaledSize = Math.max(22, 32 - displayContents.length() / 4);
-        contentsTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, scaledSize);
-
-        TextView supplementTextView = (TextView) findViewById(R.id.contents_supplement_text_view);
-        supplementTextView.setText("");
-        supplementTextView.setOnClickListener(null);
-        if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(
-                PreferencesActivity.KEY_SUPPLEMENTAL, true)) {
-            SupplementalInfoRetriever.maybeInvokeRetrieval(supplementTextView,
-                    resultHandler.getResult(),
-                    historyManager,
-                    this);
-        }
+        //// TODO: 2017/9/15 内容
+//        TextView contentsTextView = (TextView) findViewById(R.id.contents_text_view);
+//        contentsTextView.setText(displayContents);
+//        int scaledSize = Math.max(22, 32 - displayContents.length() / 4);
+//        contentsTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, scaledSize);
+// TODO: 2017/9/15 内容补充;
+//        TextView supplementTextView = (TextView) findViewById(R.id.contents_supplement_text_view);
+//        supplementTextView.setText("");
+//        supplementTextView.setOnClickListener(null);
+//        if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(
+        // TODO: 2017/9/15 获得更多信息;
+//                PreferencesActivity.KEY_SUPPLEMENTAL, true)) {
+//            SupplementalInfoRetriever.maybeInvokeRetrieval(supplementTextView,
+//                    resultHandler.getResult(),
+//                    this);
+//        }
 
         int buttonCount = resultHandler.getButtonCount();
-        ViewGroup buttonView = (ViewGroup) findViewById(R.id.result_button_view);
-        buttonView.requestFocus();
-        for (int x = 0; x < ResultHandler.MAX_BUTTON_COUNT; x++) {
-            TextView button = (TextView) buttonView.getChildAt(x);
-            if (x < buttonCount) {
-                button.setVisibility(View.VISIBLE);
-                button.setText(resultHandler.getButtonText(x));
-                button.setOnClickListener(new ResultButtonListener(resultHandler, x));
-            } else {
-                button.setVisibility(View.GONE);
-            }
-        }
+        //// TODO: 2017/9/15 底部连接;
+//        ViewGroup buttonView = (ViewGroup) findViewById(R.id.result_button_view);
+//        buttonView.requestFocus();
+//        for (int x = 0; x < ResultHandler.MAX_BUTTON_COUNT; x++) {
+//            TextView button = (TextView) buttonView.getChildAt(x);
+//            if (x < buttonCount) {
+//                button.setVisibility(View.VISIBLE);
+//                button.setText(resultHandler.getButtonText(x));
+//                button.setOnClickListener(new ResultButtonListener(resultHandler, x));
+//            } else {
+//                button.setVisibility(View.GONE);
+//            }
+//        }
 
     }
 
@@ -627,62 +641,62 @@ public final class CaptureActivity2 extends Activity implements SurfaceHolder.Ca
 
         maybeSetClipboard(resultHandler);
 
-        switch (source) {
-            case NATIVE_APP_INTENT:
-                // Hand back whatever action they requested - this can be changed to Intents.Scan.ACTION when
-                // the deprecated intent is retired.
-                Intent intent = new Intent(getIntent().getAction());
-                intent.addFlags(Intents.FLAG_NEW_DOC);
-                intent.putExtra(Intents.Scan.RESULT, rawResult.toString());
-                intent.putExtra(Intents.Scan.RESULT_FORMAT, rawResult.getBarcodeFormat().toString());
-                byte[] rawBytes = rawResult.getRawBytes();
-                if (rawBytes != null && rawBytes.length > 0) {
-                    intent.putExtra(Intents.Scan.RESULT_BYTES, rawBytes);
-                }
-                Map<ResultMetadataType, ?> metadata = rawResult.getResultMetadata();
-                if (metadata != null) {
-                    if (metadata.containsKey(ResultMetadataType.UPC_EAN_EXTENSION)) {
-                        intent.putExtra(Intents.Scan.RESULT_UPC_EAN_EXTENSION,
-                                metadata.get(ResultMetadataType.UPC_EAN_EXTENSION).toString());
-                    }
-                    Number orientation = (Number) metadata.get(ResultMetadataType.ORIENTATION);
-                    if (orientation != null) {
-                        intent.putExtra(Intents.Scan.RESULT_ORIENTATION, orientation.intValue());
-                    }
-                    String ecLevel = (String) metadata.get(ResultMetadataType.ERROR_CORRECTION_LEVEL);
-                    if (ecLevel != null) {
-                        intent.putExtra(Intents.Scan.RESULT_ERROR_CORRECTION_LEVEL, ecLevel);
-                    }
-                    @SuppressWarnings("unchecked")
-                    Iterable<byte[]> byteSegments = (Iterable<byte[]>) metadata.get(ResultMetadataType.BYTE_SEGMENTS);
-                    if (byteSegments != null) {
-                        int i = 0;
-                        for (byte[] byteSegment : byteSegments) {
-                            intent.putExtra(Intents.Scan.RESULT_BYTE_SEGMENTS_PREFIX + i, byteSegment);
-                            i++;
-                        }
-                    }
-                }
-                sendReplyMessage(R.id.return_scan_result, intent, resultDurationMS);
-                break;
-
-            case PRODUCT_SEARCH_LINK:
-                // Reformulate the URL which triggered us into a query, so that the request goes to the same
-                // TLD as the scan URL.
-                int end = sourceUrl.lastIndexOf("/scan");
-                String productReplyURL = sourceUrl.substring(0, end) + "?q=" +
-                        resultHandler.getDisplayContents() + "&source=zxing";
-                sendReplyMessage(R.id.launch_product_query, productReplyURL, resultDurationMS);
-                break;
-
-            case ZXING_LINK:
-                if (scanFromWebPageManager != null && scanFromWebPageManager.isScanFromWebPage()) {
-                    String linkReplyURL = scanFromWebPageManager.buildReplyURL(rawResult, resultHandler);
-                    scanFromWebPageManager = null;
-                    sendReplyMessage(R.id.launch_product_query, linkReplyURL, resultDurationMS);
-                }
-                break;
-        }
+//        switch (source) {
+//            case NATIVE_APP_INTENT:
+//                // Hand back whatever action they requested - this can be changed to Intents.Scan.ACTION when
+//                // the deprecated intent is retired.
+//                Intent intent = new Intent(getIntent().getAction());
+//                intent.addFlags(Intents.FLAG_NEW_DOC);
+//                intent.putExtra(Intents.Scan.RESULT, rawResult.toString());
+//                intent.putExtra(Intents.Scan.RESULT_FORMAT, rawResult.getBarcodeFormat().toString());
+//                byte[] rawBytes = rawResult.getRawBytes();
+//                if (rawBytes != null && rawBytes.length > 0) {
+//                    intent.putExtra(Intents.Scan.RESULT_BYTES, rawBytes);
+//                }
+//                Map<ResultMetadataType, ?> metadata = rawResult.getResultMetadata();
+//                if (metadata != null) {
+//                    if (metadata.containsKey(ResultMetadataType.UPC_EAN_EXTENSION)) {
+//                        intent.putExtra(Intents.Scan.RESULT_UPC_EAN_EXTENSION,
+//                                metadata.get(ResultMetadataType.UPC_EAN_EXTENSION).toString());
+//                    }
+//                    Number orientation = (Number) metadata.get(ResultMetadataType.ORIENTATION);
+//                    if (orientation != null) {
+//                        intent.putExtra(Intents.Scan.RESULT_ORIENTATION, orientation.intValue());
+//                    }
+//                    String ecLevel = (String) metadata.get(ResultMetadataType.ERROR_CORRECTION_LEVEL);
+//                    if (ecLevel != null) {
+//                        intent.putExtra(Intents.Scan.RESULT_ERROR_CORRECTION_LEVEL, ecLevel);
+//                    }
+//                    @SuppressWarnings("unchecked")
+//                    Iterable<byte[]> byteSegments = (Iterable<byte[]>) metadata.get(ResultMetadataType.BYTE_SEGMENTS);
+//                    if (byteSegments != null) {
+//                        int i = 0;
+//                        for (byte[] byteSegment : byteSegments) {
+//                            intent.putExtra(Intents.Scan.RESULT_BYTE_SEGMENTS_PREFIX + i, byteSegment);
+//                            i++;
+//                        }
+//                    }
+//                }
+//                sendReplyMessage(R.id.return_scan_result, intent, resultDurationMS);
+//                break;
+//
+//            case PRODUCT_SEARCH_LINK:
+//                // Reformulate the URL which triggered us into a query, so that the request goes to the same
+//                // TLD as the scan URL.
+//                int end = sourceUrl.lastIndexOf("/scan");
+//                String productReplyURL = sourceUrl.substring(0, end) + "?q=" +
+//                        resultHandler.getDisplayContents() + "&source=zxing";
+//                sendReplyMessage(R.id.launch_product_query, productReplyURL, resultDurationMS);
+//                break;
+//
+//            case ZXING_LINK:
+//                if (scanFromWebPageManager != null && scanFromWebPageManager.isScanFromWebPage()) {
+//                    String linkReplyURL = scanFromWebPageManager.buildReplyURL(rawResult, resultHandler);
+//                    scanFromWebPageManager = null;
+//                    sendReplyMessage(R.id.launch_product_query, linkReplyURL, resultDurationMS);
+//                }
+//                break;
+//        }
     }
 
     private void maybeSetClipboard(ResultHandler resultHandler) {
@@ -714,6 +728,7 @@ public final class CaptureActivity2 extends Activity implements SurfaceHolder.Ca
             cameraManager.openDriver(surfaceHolder);
             // Creating the handler starts the preview, which can also throw a RuntimeException.
             if (handler == null) {
+                //此方法开始扫描;
                 handler = new CaptureActivityHandler2(this, decodeFormats, decodeHints, characterSet, cameraManager);
             }
             decodeOrStoreSavedBitmap(null, null);

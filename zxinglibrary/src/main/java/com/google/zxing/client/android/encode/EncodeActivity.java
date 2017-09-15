@@ -50,6 +50,15 @@ import java.util.regex.Pattern;
  * another person can scan it with their device.
  *
  * @author dswitkin@google.com (Daniel Switkin)
+ * //todo 隐式启动;
+ * Intent intent = new Intent(Intents.Encode.ACTION);
+intent.addFlags(Intents.FLAG_NEW_DOC);
+intent.putExtra(Intents.Encode.TYPE, Contents.Type.TEXT);
+intent.putExtra(Intents.Encode.DATA, text);
+intent.putExtra(Intents.Encode.FORMAT, BarcodeFormat.QR_CODE.toString());
+startActivity(intent);
+ todo 粘贴板
+CharSequence text = ClipboardInterface.getText(ShareActivity.this);
  */
 public final class EncodeActivity extends Activity {
 

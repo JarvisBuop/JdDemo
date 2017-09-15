@@ -14,36 +14,36 @@
  * limitations under the License.
  */
 
-package com.google.zxing.client.android.result.supplement;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
+package com.google.zxing.client.android.jdRefactor.supplement;
 
 import android.content.Context;
 import android.widget.TextView;
+
 import com.google.zxing.client.android.HttpHelper;
 import com.google.zxing.client.android.LocaleManager;
 import com.google.zxing.client.android.R;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import com.google.zxing.client.android.history.HistoryManager;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * @author Kamil Kaczmarczyk
  * @author Sean Owen
  */
-final class BookResultInfoRetriever extends SupplementalInfoRetriever {
+final class BookResultInfoRetriever2 extends SupplementalInfoRetriever2 {
 
   private final String isbn;
   private final String source;
   private final Context context;
   
-  BookResultInfoRetriever(TextView textView, String isbn, HistoryManager historyManager, Context context) {
-    super(textView, historyManager);
+  BookResultInfoRetriever2(TextView textView, String isbn, Context context) {
+    super(textView);
     this.isbn = isbn;
     this.source = context.getString(R.string.msg_google_books);
     this.context = context;

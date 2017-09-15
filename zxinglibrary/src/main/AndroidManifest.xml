@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.google.zxing.client.android"
-    android:installLocation="auto">
+    package="com.google.zxing.client.android">
 
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -64,6 +63,14 @@
                     <!--android:scheme="http" />-->
             <!--</intent-filter>-->
         </activity>
+
+        <activity
+            android:name="com.google.zxing.client.android.jdRefactor.ui.act.CaptureActivity2"
+            android:clearTaskOnLaunch="true"
+            android:screenOrientation="portrait"
+            android:stateNotNeeded="true"
+            android:theme="@style/CaptureTheme"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
             android:name=".PreferencesActivity"
             android:label="@string/preferences_name"

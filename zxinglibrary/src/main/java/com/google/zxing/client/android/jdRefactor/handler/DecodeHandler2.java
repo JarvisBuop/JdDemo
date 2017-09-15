@@ -30,7 +30,7 @@ import com.google.zxing.PlanarYUVLuminanceSource;
 import com.google.zxing.ReaderException;
 import com.google.zxing.Result;
 import com.google.zxing.client.android.R;
-import com.google.zxing.client.android.jdRefactor.ui.act.CaptureActivity2;
+import com.google.zxing.client.android.jdRefactor.ui.CaptureActivity2;
 import com.google.zxing.common.HybridBinarizer;
 
 import java.io.ByteArrayOutputStream;
@@ -74,6 +74,20 @@ public final class DecodeHandler2 extends Handler {
   private void decode(byte[] data, int width, int height) {
     long start = System.currentTimeMillis();
     Result rawResult = null;
+    //****************************
+    //1,CameraManager
+    //2.竖屏识别,一维条码识别不了;
+    byte[] rotatedData = new byte[data.length];
+    for (int y = 0; y < height; y++) {
+      for (int x = 0; x < width; x++)
+        rotatedData[x * height + height - y - 1] = data[x + y * width];
+    }
+    int tmp = width;
+    width = height;
+    height = tmp;
+    data = rotatedData;
+    //****************************
+
     PlanarYUVLuminanceSource source = activity.getCameraManager().buildLuminanceSource(data, width, height);
     if (source != null) {
       BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));

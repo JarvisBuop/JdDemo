@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.zxing.client.android.jdRefactor.ui.statusmode;
+package com.google.zxing.client.android.jdRefactor.statusmode;
 
 import static com.google.zxing.client.android.jdRefactor.controller.JdCodeParams.ISUSEFLASH;
 

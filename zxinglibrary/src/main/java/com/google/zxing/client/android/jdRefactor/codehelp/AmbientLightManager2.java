@@ -23,7 +23,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
 import com.google.zxing.client.android.camera.CameraManager;
-import com.google.zxing.client.android.jdRefactor.ui.statusmode.FrontLightMode2;
+import com.google.zxing.client.android.jdRefactor.statusmode.FrontLightMode2;
 
 /**
  * Detects ambient light and switches on the front light when very dark, and off again when sufficiently light.

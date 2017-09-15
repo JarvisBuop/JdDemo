@@ -19,62 +19,60 @@
     <uses-feature
         android:name="android.hardware.camera.flash"
         android:required="false" />
-    <uses-feature android:name="android.hardware.screen.landscape" />
-    <uses-feature
-        android:name="android.hardware.wifi"
-        android:required="false" />
+    <uses-feature android:name="android.hardware.screen.portrait" />
 
     <application
         android:allowBackup="true">
+        <!--<activity-->
+            <!--android:name=".CaptureActivity"-->
+            <!--android:clearTaskOnLaunch="true"-->
+            <!--android:screenOrientation="portrait"-->
+            <!--android:stateNotNeeded="true"-->
+            <!--android:theme="@style/CaptureTheme"-->
+            <!--android:windowSoftInputMode="stateAlwaysHidden">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="com.google.zxing.client.android.SCAN" />-->
+                <!--<category android:name="android.intent.category.DEFAULT" />-->
+            <!--</intent-filter>-->
+            <!--&lt;!&ndash; Allow web apps to launch Barcode Scanner by linking to http://zxing.appspot.com/scan. &ndash;&gt;-->
+            <!--&lt;!&ndash;<intent-filter>&ndash;&gt;-->
+                <!--&lt;!&ndash;<action android:name="android.intent.action.VIEW" />&ndash;&gt;-->
+
+                <!--&lt;!&ndash;<category android:name="android.intent.category.DEFAULT" />&ndash;&gt;-->
+                <!--&lt;!&ndash;<category android:name="android.intent.category.BROWSABLE" />&ndash;&gt;-->
+
+                <!--&lt;!&ndash;<data&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:host="zxing.appspot.com"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:path="/scan"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:scheme="http" />&ndash;&gt;-->
+            <!--&lt;!&ndash;</intent-filter>&ndash;&gt;-->
+
+            <!--&lt;!&ndash; We also support a Google Product Search URL. &ndash;&gt;-->
+            <!--&lt;!&ndash;<intent-filter>&ndash;&gt;-->
+                <!--&lt;!&ndash;<action android:name="android.intent.action.VIEW" />&ndash;&gt;-->
+
+                <!--&lt;!&ndash;<category android:name="android.intent.category.DEFAULT" />&ndash;&gt;-->
+                <!--&lt;!&ndash;<category android:name="android.intent.category.BROWSABLE" />&ndash;&gt;-->
+
+                <!--&lt;!&ndash;<data&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:host="www.google.com"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:path="/m/products/scan"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:scheme="http" />&ndash;&gt;-->
+            <!--&lt;!&ndash;</intent-filter>&ndash;&gt;-->
+        <!--</activity>-->
+
         <activity
-            android:name=".CaptureActivity"
+            android:name="com.google.zxing.client.android.jdRefactor.ui.CaptureActivity2"
             android:clearTaskOnLaunch="true"
             android:screenOrientation="portrait"
-            android:stateNotNeeded="true"
-            android:theme="@style/CaptureTheme"
-            android:windowSoftInputMode="stateAlwaysHidden">
-            <intent-filter>
-                <action android:name="com.google.zxing.client.android.SCAN" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-            <!-- Allow web apps to launch Barcode Scanner by linking to http://zxing.appspot.com/scan. -->
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.VIEW" />-->
-
-                <!--<category android:name="android.intent.category.DEFAULT" />-->
-                <!--<category android:name="android.intent.category.BROWSABLE" />-->
-
-                <!--<data-->
-                    <!--android:host="zxing.appspot.com"-->
-                    <!--android:path="/scan"-->
-                    <!--android:scheme="http" />-->
-            <!--</intent-filter>-->
-
-            <!-- We also support a Google Product Search URL. -->
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.VIEW" />-->
-
-                <!--<category android:name="android.intent.category.DEFAULT" />-->
-                <!--<category android:name="android.intent.category.BROWSABLE" />-->
-
-                <!--<data-->
-                    <!--android:host="www.google.com"-->
-                    <!--android:path="/m/products/scan"-->
-                    <!--android:scheme="http" />-->
-            <!--</intent-filter>-->
-        </activity>
-
-        <activity
-            android:name="com.google.zxing.client.android.jdRefactor.ui.act.CaptureActivity2"
-            android:clearTaskOnLaunch="true"
-            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden"
             android:stateNotNeeded="true"
             android:theme="@style/CaptureTheme"
             android:windowSoftInputMode="stateAlwaysHidden"/>
-        <activity
-            android:name=".PreferencesActivity"
-            android:label="@string/preferences_name"
-            android:stateNotNeeded="true" />
+        <!--<activity-->
+            <!--android:name=".PreferencesActivity"-->
+            <!--android:label="@string/preferences_name"-->
+            <!--android:stateNotNeeded="true" />-->
         <activity
             android:name=".encode.EncodeActivity"
             android:stateNotNeeded="true">
@@ -95,16 +93,7 @@
                 <data android:mimeType="text/plain" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".book.SearchBookContentsActivity"
-            android:label="@string/sbc_name"
-            android:screenOrientation="sensorLandscape"
-            android:stateNotNeeded="true">
-            <intent-filter>
-                <action android:name="com.google.zxing.client.android.SEARCH_BOOK_CONTENTS" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
+
         <activity
             android:name=".share.ShareActivity"
             android:screenOrientation="user"

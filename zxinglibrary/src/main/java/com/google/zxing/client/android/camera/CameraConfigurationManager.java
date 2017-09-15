@@ -26,7 +26,7 @@ import android.view.WindowManager;
 
 import com.google.zxing.client.android.camera.open.CameraFacing;
 import com.google.zxing.client.android.camera.open.OpenCamera;
-import com.google.zxing.client.android.jdRefactor.ui.statusmode.FrontLightMode2;
+import com.google.zxing.client.android.jdRefactor.statusmode.FrontLightMode2;
 
 import static com.google.zxing.client.android.jdRefactor.controller.JdCodeParams.ISAUTO_FOCUS;
 import static com.google.zxing.client.android.jdRefactor.controller.JdCodeParams.ISINVERT_COLOR;
@@ -147,6 +147,11 @@ final class CameraConfigurationManager {
 
         Camera theCamera = camera.getCamera();
         Camera.Parameters parameters = theCamera.getParameters();
+//*********************
+        //防止相机预览拉升;
+        theCamera.setDisplayOrientation(90);//add 这句代码作用是旋转镜头90度，使相机预览方向正确显示
+        theCamera.setParameters(parameters);
+//*********************
 
         if (parameters == null) {
             Log.w(TAG, "Device error: no camera parameters are available. Proceeding without configuration.");

@@ -36,7 +36,7 @@ import com.google.zxing.Result;
 import com.google.zxing.client.android.Intents;
 import com.google.zxing.client.android.R;
 import com.google.zxing.client.android.camera.CameraManager;
-import com.google.zxing.client.android.jdRefactor.ui.act.CaptureActivity2;
+import com.google.zxing.client.android.jdRefactor.ui.CaptureActivity2;
 
 import java.util.Collection;
 import java.util.Map;

@@ -7,31 +7,33 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="?android:attr/actionBarSize"
         android:background="#333"
+        android:elevation="5dp"
         android:padding="10dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            android:text="二维码/条码"
             android:textColor="#fff"
-            android:textSize="16sp"
-            android:text="二维码/条码" />
+            android:textSize="16sp" />
 
         <ImageView
             android:id="@+id/image_multi"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="gone"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/ic_check" />
+            android:src="@drawable/ic_check"
+            android:visibility="gone" />
     </RelativeLayout>
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
 
         <SurfaceView
             android:id="@+id/preview_view"
@@ -50,8 +52,10 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center_horizontal"
             android:background="@color/transparent"
+            android:padding="8dp"
             android:text="@string/msg_default_status"
             android:textColor="@color/status_text" />
     </FrameLayout>
+
 
 </LinearLayout>

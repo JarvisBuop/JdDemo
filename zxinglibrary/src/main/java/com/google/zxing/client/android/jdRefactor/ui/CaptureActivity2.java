@@ -53,6 +53,7 @@ import com.google.zxing.client.android.jdRefactor.codehelp.InactivityTimer2;
 import com.google.zxing.client.android.jdRefactor.controller.JdCodeParams;
 import com.google.zxing.client.android.jdRefactor.handler.CaptureActivityHandler2;
 import com.google.zxing.client.android.jdRefactor.statusmode.ResultPostBack;
+import com.google.zxing.client.android.jdRefactor.ui.viewfinder.JdDraw;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -129,10 +130,10 @@ public final class CaptureActivity2 extends Activity implements SurfaceHolder.Ca
 
     private void initIntent() {
         Serializable serializableExtra = getIntent().getSerializableExtra(ENTER_CODE_PARAMS);
-        if(serializableExtra !=null && serializableExtra instanceof JdCodeParams.ParamsBuilder){
+        if (serializableExtra != null && serializableExtra instanceof JdCodeParams.ParamsBuilder) {
             JdCodeParams.ParamsBuilder builder = (JdCodeParams.ParamsBuilder) serializableExtra;
             builder.commit();
-        }else {
+        } else {
             JdCodeParams.resetParams();
         }
     }
@@ -172,19 +173,21 @@ public final class CaptureActivity2 extends Activity implements SurfaceHolder.Ca
     }
 
     private void initAct() {
-        imageView.setVisibility(ISMULTI_SCANMODE?View.VISIBLE:View.GONE);
-        if(ISMULTI_SCANMODE){
+        imageView.setVisibility(ISMULTI_SCANMODE ? View.VISIBLE : View.GONE);
+        if (ISMULTI_SCANMODE) {
             mMultiResultList = new ArrayList<>();
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent();
-                    intent.putExtra(REQUEST_CODE_LIST,mMultiResultList);
-                    setResult(RESULT_OK,intent);
+                    intent.putExtra(REQUEST_CODE_LIST, mMultiResultList);
+                    setResult(RESULT_OK, intent);
                     finish();
                 }
             });
         }
+        //更改样式;
+        viewfinderView.setViewDraw(new JdDraw());
     }
 
     private void initParams() {
@@ -312,6 +315,7 @@ public final class CaptureActivity2 extends Activity implements SurfaceHolder.Ca
     /**
      * A valid barcode has been found, so give an indication of success and show the results.
      * 解码成功回调的方法
+     *
      * @param rawResult   The contents of the barcode.
      * @param scaleFactor amount by which thumbnail was scaled
      * @param barcode     A greyscale bitmap of the camera data which was decoded.
@@ -332,8 +336,9 @@ public final class CaptureActivity2 extends Activity implements SurfaceHolder.Ca
             Toast.makeText(getApplicationContext(),
                     getResources().getString(R.string.msg_bulk_mode_scanned)/* + " (" + rawResult.getText() + ')'*/,
                     Toast.LENGTH_SHORT).show();
-            mMultiResultList.add(new ResultPostBack(rawResult.getText(),rawResult.getRawBytes(),rawResult.getNumBits(),rawResult.getResultPoints(),
-                    rawResult.getBarcodeFormat(),rawResult.getResultMetadata(),rawResult.getTimestamp(),barcode,scaleFactor));
+            //TransactionTooLargeException 防止数据过大;
+            mMultiResultList.add(new ResultPostBack(rawResult.getText(), null, rawResult.getNumBits(), null,
+                    rawResult.getBarcodeFormat(), null, rawResult.getTimestamp(), null, scaleFactor));
             // Wait a moment or else it will scan the same barcode continuously about 3 times
             restartPreviewAfterDelay(BULK_MODE_SCAN_DELAY_MS);
         }
@@ -341,11 +346,11 @@ public final class CaptureActivity2 extends Activity implements SurfaceHolder.Ca
         if (rawResult != null) maybeSetClipboard(rawResult.getText());
 
         //TODO 回调处理;
-        if(!ISMULTI_SCANMODE){
+        if (!ISMULTI_SCANMODE) {
             Intent intent = new Intent();
-            intent.putExtra(REQUEST_CODE_META,new ResultPostBack(rawResult.getText(),rawResult.getRawBytes(),rawResult.getNumBits(),rawResult.getResultPoints(),
-                    rawResult.getBarcodeFormat(),rawResult.getResultMetadata(),rawResult.getTimestamp(),barcode,scaleFactor));
-            setResult(RESULT_OK,intent);
+            intent.putExtra(REQUEST_CODE_META, new ResultPostBack(rawResult.getText(), rawResult.getRawBytes(), rawResult.getNumBits(), rawResult.getResultPoints(),
+                    rawResult.getBarcodeFormat(), rawResult.getResultMetadata(), rawResult.getTimestamp(), barcode, scaleFactor));
+            setResult(RESULT_OK, intent);
             finish();
         }
     }

@@ -43,7 +43,7 @@ public class ZxingAct extends AppCompatActivity implements View.OnClickListener 
         findViewById(R.id.btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                enterQRcode(CaptureActivity2.class,0);//dan
+                enterQRcode(CaptureActivity2.class, 0);//dan
             }
         });
 
@@ -70,39 +70,40 @@ public class ZxingAct extends AppCompatActivity implements View.OnClickListener 
         startActivity(new Intent(this, newClass));
     }
 
-    private void enterQRcode(Class newClass,int request) {
+    private void enterQRcode(Class newClass, int request) {
         Intent intent = new Intent(this, newClass);
-        if(request ==1){
+        if (request == 1) {
             JdCodeParams.ParamsBuilder paramsBuilder = new JdCodeParams.ParamsBuilder()
                     .enableBarCode(true)
                     .enableQrCode(true)
                     .enablePlayaudio(false)
                     .enablePlayvibrator(true)
                     .enableIsmultiscanmode(true);
-            intent.putExtra(ENTER_CODE_PARAMS,paramsBuilder);
-            startActivityForResult(intent,request);
+            intent.putExtra(ENTER_CODE_PARAMS, paramsBuilder);
+            startActivityForResult(intent, request);
             return;
         }
-        startActivityForResult(intent,request);
+        startActivityForResult(intent, request);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == RESULT_OK && requestCode == 1){//多选返回的是列表数据;
+        if (data == null) return;
+        if (resultCode == RESULT_OK && requestCode == 1) {//多选返回的是列表数据;
             ArrayList<ResultPostBack> serializableExtra = (ArrayList<ResultPostBack>) data.getSerializableExtra(CaptureActivity2.REQUEST_CODE_LIST);
-            if(serializableExtra !=null){
-                Log.e("jarvispost",serializableExtra.toString());
-            }else{
-                Log.e("jarvispost","nul");
+            if (serializableExtra != null) {
+                Log.e("jarvispost", serializableExtra.toString());
+            } else {
+                Log.e("jarvispost", "nul");
             }
-        }else if(requestCode == 0){//单选返回的室对象;
+        } else if (requestCode == 0) {//单选返回的室对象;
             ResultPostBack parcelableExtra = data.getParcelableExtra(CaptureActivity2.REQUEST_CODE_META);
-            if(parcelableExtra !=null){
-                Log.e("jarvispost",parcelableExtra.toString());
+            if (parcelableExtra != null) {
+                Log.e("jarvispost", parcelableExtra.toString());
 
-            }else {
-                Log.e("jarvispost","null");
+            } else {
+                Log.e("jarvispost", "null");
             }
         }
     }
@@ -140,7 +141,7 @@ public class ZxingAct extends AppCompatActivity implements View.OnClickListener 
                 }
                 break;
             case R.id.btn6:
-                enterQRcode(CaptureActivity2.class,1);
+                enterQRcode(CaptureActivity2.class, 1);
                 break;
         }
     }

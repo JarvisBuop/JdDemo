@@ -41,7 +41,6 @@ import android.widget.Toast;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.DecodeHintType;
 import com.google.zxing.Result;
-import com.google.zxing.ResultMetadataType;
 import com.google.zxing.ResultPoint;
 import com.google.zxing.client.android.FinishListener;
 import com.google.zxing.client.android.R;
@@ -51,14 +50,15 @@ import com.google.zxing.client.android.clipboard.ClipboardInterface;
 import com.google.zxing.client.android.jdRefactor.codehelp.AmbientLightManager2;
 import com.google.zxing.client.android.jdRefactor.codehelp.BeepManager2;
 import com.google.zxing.client.android.jdRefactor.codehelp.InactivityTimer2;
+import com.google.zxing.client.android.jdRefactor.controller.JdCodeParams;
 import com.google.zxing.client.android.jdRefactor.handler.CaptureActivityHandler2;
+import com.google.zxing.client.android.jdRefactor.statusmode.ResultPostBack;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.EnumSet;
 import java.util.Map;
-import java.util.Set;
 
 import static com.google.zxing.client.android.jdRefactor.controller.JdCodeParams.COPY_2_CLIPBOARD;
 import static com.google.zxing.client.android.jdRefactor.controller.JdCodeParams.ISMULTI_SCANMODE;
@@ -76,23 +76,14 @@ import static com.google.zxing.client.android.jdRefactor.controller.JdCodeParams
  * 2.条形码扫不到注意横屏;
  */
 public final class CaptureActivity2 extends Activity implements SurfaceHolder.Callback {
-
     private static final String TAG = CaptureActivity2.class.getSimpleName();
-    public static final String REQUEST_CODE_LIST = "CAPTURE_LIST";
-    public static final String REQUEST_CODE_META = "CAPTURE_META";
-    public static final String REQUEST_CODE_FORMAT = "CAPTURE_FORMAT";
-
+    public static final String ENTER_CODE_PARAMS = "ENTER_PARAMS";//自定义设置参数;
+    public static final String REQUEST_CODE_LIST = "CAPTURE_LIST";//批量扫描;key
+    public static final String REQUEST_CODE_META = "CAPTURE_META";//单次扫描;key
     private static final long BULK_MODE_SCAN_DELAY_MS = 1000L;
-
-    private static final Collection<ResultMetadataType> DISPLAYABLE_METADATA_TYPES =
-            EnumSet.of(ResultMetadataType.ISSUE_NUMBER,
-                    ResultMetadataType.SUGGESTED_PRICE,
-                    ResultMetadataType.ERROR_CORRECTION_LEVEL,
-                    ResultMetadataType.POSSIBLE_COUNTRY);
 
     private CameraManager cameraManager;
     private CaptureActivityHandler2 handler;
-    private Result savedResultToShow;
     private ViewfinderView viewfinderView;
     private TextView statusView;
     private Result lastResult;
@@ -106,7 +97,7 @@ public final class CaptureActivity2 extends Activity implements SurfaceHolder.Ca
     private AmbientLightManager2 ambientLightManager;
 
     private ImageView imageView;
-    private ArrayList<Result> mMultiResultList;
+    private ArrayList<ResultPostBack> mMultiResultList;
 
 
     public ViewfinderView getViewfinderView() {
@@ -133,7 +124,17 @@ public final class CaptureActivity2 extends Activity implements SurfaceHolder.Ca
         inactivityTimer2 = new InactivityTimer2(this);
         beepManager = new BeepManager2(this);
         ambientLightManager = new AmbientLightManager2(this);
+        initIntent();
+    }
 
+    private void initIntent() {
+        Serializable serializableExtra = getIntent().getSerializableExtra(ENTER_CODE_PARAMS);
+        if(serializableExtra !=null && serializableExtra instanceof JdCodeParams.ParamsBuilder){
+            JdCodeParams.ParamsBuilder builder = (JdCodeParams.ParamsBuilder) serializableExtra;
+            builder.commit();
+        }else {
+            JdCodeParams.resetParams();
+        }
     }
 
     @Override
@@ -326,22 +327,13 @@ public final class CaptureActivity2 extends Activity implements SurfaceHolder.Ca
             drawResultPoints(barcode, scaleFactor, rawResult);
         }
 
-        Log.e("jarvis", rawResult.toString() + "\n" + barcode.toString() + "\n" + scaleFactor);
-        Log.e("jarvis", rawResult.getText() + "/" + rawResult.getBarcodeFormat() + "/" + rawResult.getNumBits());
-        Map<ResultMetadataType, Object> resultMetadata = rawResult.getResultMetadata();
-        if (resultMetadata != null) {
-            Set<Map.Entry<ResultMetadataType, Object>> entries = resultMetadata.entrySet();
-            for (Map.Entry<ResultMetadataType, Object> entry : entries) {
-                Log.e("jarvismap", entry.getKey().toString() + "/" + entry.getValue().toString());
-            }
-        }
-
         //  TODO: 2017/9/15 批量扫描模式;
         if (fromLiveScan && ISMULTI_SCANMODE) {
             Toast.makeText(getApplicationContext(),
-                    getResources().getString(R.string.msg_bulk_mode_scanned) + " (" + rawResult.getText() + ')',
+                    getResources().getString(R.string.msg_bulk_mode_scanned)/* + " (" + rawResult.getText() + ')'*/,
                     Toast.LENGTH_SHORT).show();
-            mMultiResultList.add(rawResult);
+            mMultiResultList.add(new ResultPostBack(rawResult.getText(),rawResult.getRawBytes(),rawResult.getNumBits(),rawResult.getResultPoints(),
+                    rawResult.getBarcodeFormat(),rawResult.getResultMetadata(),rawResult.getTimestamp(),barcode,scaleFactor));
             // Wait a moment or else it will scan the same barcode continuously about 3 times
             restartPreviewAfterDelay(BULK_MODE_SCAN_DELAY_MS);
         }
@@ -351,8 +343,8 @@ public final class CaptureActivity2 extends Activity implements SurfaceHolder.Ca
         //TODO 回调处理;
         if(!ISMULTI_SCANMODE){
             Intent intent = new Intent();
-            intent.putExtra(REQUEST_CODE_META,rawResult.getText());
-            intent.putExtra(REQUEST_CODE_FORMAT,rawResult.getBarcodeFormat());
+            intent.putExtra(REQUEST_CODE_META,new ResultPostBack(rawResult.getText(),rawResult.getRawBytes(),rawResult.getNumBits(),rawResult.getResultPoints(),
+                    rawResult.getBarcodeFormat(),rawResult.getResultMetadata(),rawResult.getTimestamp(),barcode,scaleFactor));
             setResult(RESULT_OK,intent);
             finish();
         }
@@ -423,7 +415,6 @@ public final class CaptureActivity2 extends Activity implements SurfaceHolder.Ca
                 //此方法开始扫描;
                 handler = new CaptureActivityHandler2(this, decodeFormats, decodeHints, characterSet, cameraManager);
             }
-            savedResultToShow = null;
         } catch (IOException ioe) {
             Log.w(TAG, ioe);
             displayFrameworkBugMessageAndExit();

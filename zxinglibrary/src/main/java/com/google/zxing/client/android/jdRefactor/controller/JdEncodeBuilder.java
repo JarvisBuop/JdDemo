@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
 
@@ -341,6 +340,10 @@ public class JdEncodeBuilder {
     }
 
     public static Bitmap getBitmap(ImageView imageView){
-        return ((BitmapDrawable) ((ImageView) imageView).getDrawable()).getBitmap();
+        if(imageView==null ||imageView.getWidth() <=0 || imageView.getHeight()<=0 ) return null;
+        imageView.setDrawingCacheEnabled(true);
+        Bitmap bitmap = Bitmap.createBitmap(imageView.getDrawingCache());
+        imageView.setDrawingCacheEnabled(false);
+        return bitmap;
     }
 }

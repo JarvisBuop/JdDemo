@@ -17,7 +17,7 @@
             android:layout_centerInParent="true"
             android:textColor="#fff"
             android:textSize="16sp"
-            tools:text="二维码/条码" />
+            android:text="二维码/条码" />
 
         <ImageView
             android:id="@+id/image_multi"

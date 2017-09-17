@@ -54,10 +54,10 @@ public class JdDraw implements ViewFinderDraw {
     @Override
     public void drawInside(Canvas canvas, Rect frame, Paint mPaint) {
         //上下移动扫描线;
+        middle = middle + rate * moveOffset;
         if (middle <= frame.top || middle >= frame.bottom) {
             middle = frame.top;
         }
-        middle = middle + rate * moveOffset;
         canvas.drawRect(frame.left + 2, middle - 1, frame.right - 1, middle + 2, mPaint);
     }
 

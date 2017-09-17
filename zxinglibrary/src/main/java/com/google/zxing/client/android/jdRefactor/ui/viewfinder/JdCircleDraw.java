@@ -14,7 +14,6 @@ import android.graphics.RectF;
 import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
-import android.util.Log;
 import android.util.TypedValue;
 
 import com.google.zxing.client.android.R;
@@ -56,10 +55,10 @@ public class JdCircleDraw implements ViewFinderDraw {
     @Override
     public void drawInside(Canvas canvas, Rect frame, Paint mPaint) {
         //上下移动扫描线;
+        middle = middle + rate * moveOffset;
         if (middle <= frame.top || middle >= frame.bottom) {
             middle = frame.top;
         }
-        middle = middle + rate * moveOffset;
         //计算水平的距离;
         int radius = frame.width() / 2;
         double circleInner = 0;
@@ -94,10 +93,10 @@ public class JdCircleDraw implements ViewFinderDraw {
         mPaint.setAntiAlias(true);
         mPaint.setStrokeCap(Paint.Cap.ROUND);
 
-        Path path = new Path();
         double scale = (middle - frame.top) * 1.0f / frame.height();
+        if (scale < 0 || scale > 1) return;
+        Path path = new Path();
         RectF rectF = new RectF(frame.left - offsetArc, frame.top - offsetArc, frame.right + offsetArc, frame.bottom + offsetArc);
-        Log.e("jarvis angle", getStartSweep(scale) + "/" + getFinalSweep(scale));
         path.addArc(rectF, getStartSweep(scale), getFinalSweep(scale));
         canvas.drawPath(path, mPaint);
     }
@@ -106,10 +105,10 @@ public class JdCircleDraw implements ViewFinderDraw {
 
     private float getStartSweep(double scale) {
         if (scale <= 1.0 / 3 && scale >= 0 && !isHas) {
-            return 0f;
+            return -90f;
         } else {
             isHas = true;
-            return (float) (360f * (scale - 1.0 / 3));
+            return (float) (360f * (scale - 1.0 / 3)-90f);
         }
     }
 

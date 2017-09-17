@@ -1,6 +1,6 @@
 # JdDemo
 # study and test
-
+http://blog.csdn.net/MrJarvisDong/article/details/78008834
 ## ShowTime
 
 ![圆形扫码界面](https://github.com/JarvisBuop/JdDemo/blob/master/circle_scan2.gif "Scan by Circle")

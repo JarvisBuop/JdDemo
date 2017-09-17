@@ -4,6 +4,7 @@
 ## ShowTime
 
 ![圆形扫码界面](https://github.com/JarvisBuop/JdDemo/blob/master/circle_scan2.gif "Scan by Circle")
+
 ![方形扫码界面](https://github.com/JarvisBuop/JdDemo/blob/master/round_scan.gif "Scan by Round")
 
 ## 简化Zxing 条码扫描;

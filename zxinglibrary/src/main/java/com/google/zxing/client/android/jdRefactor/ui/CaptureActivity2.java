@@ -53,7 +53,7 @@ import com.google.zxing.client.android.jdRefactor.codehelp.InactivityTimer2;
 import com.google.zxing.client.android.jdRefactor.controller.JdCodeParams;
 import com.google.zxing.client.android.jdRefactor.handler.CaptureActivityHandler2;
 import com.google.zxing.client.android.jdRefactor.statusmode.ResultPostBack;
-import com.google.zxing.client.android.jdRefactor.ui.viewfinder.JdCircleDraw;
+import com.google.zxing.client.android.jdRefactor.ui.viewfinder.JdDraw;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -187,7 +187,7 @@ public final class CaptureActivity2 extends Activity implements SurfaceHolder.Ca
             });
         }
         //更改样式;
-        viewfinderView.setViewDraw(new JdCircleDraw());
+        viewfinderView.setViewDraw(new JdDraw());
     }
 
     private void initParams() {

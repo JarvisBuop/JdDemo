@@ -34,7 +34,7 @@ public class JdDraw implements ViewFinderDraw {
     private Context context;
 
     private int colorRound;
-    private boolean isDrawOut = false;
+    private boolean isDrawOut = true;
     int blockLengh = 9 * offset;//长边长度;
 
     @Override

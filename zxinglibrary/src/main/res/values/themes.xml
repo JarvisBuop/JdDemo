@@ -15,11 +15,11 @@
  limitations under the License.
  -->
 <resources>
-  <style name="CaptureTheme" parent="android:Theme.Holo">
+  <style name="CaptureTheme" parent="android:Theme.NoTitleBar">
     <item name="android:windowFullscreen">true</item>
     <!--闪屏页;-->
     <item name="android:windowContentOverlay">@null</item>
-    <item name="android:windowActionBarOverlay">true</item>
-    <item name="android:windowActionModeOverlay">true</item>
+    <item name="android:windowActionBarOverlay">false</item>
+    <item name="android:windowActionModeOverlay">false</item>
   </style>
 </resources>

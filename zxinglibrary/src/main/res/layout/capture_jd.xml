@@ -1,25 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_weight="1"
+    android:layout_height="match_parent">
 
-    <SurfaceView
-        android:id="@+id/preview_view"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent" />
+    <!--<FrameLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_weight="1">-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="?android:attr/actionBarSize"
+            android:background="#333"
+            android:elevation="5dp"
+            android:padding="10dp">
 
-    <com.google.zxing.client.android.ViewfinderView
-        android:id="@+id/viewfinder_view"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="二维码/条码"
+                android:textColor="#fff"
+                android:textSize="16sp" />
+
+            <ImageView
+                android:id="@+id/image_multi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_check"
+                android:visibility="gone" />
+        </RelativeLayout>
 
 
-    <TextView
-        android:id="@+id/status_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center_horizontal"
-        android:background="@color/transparent"
-        android:text="@string/msg_default_status"
-        android:textColor="@color/status_text" />
+        <SurfaceView
+            android:id="@+id/preview_view"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" />
 
-</merge>
+        <com.google.zxing.client.android.ViewfinderView
+            android:id="@+id/viewfinder_view"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" />
+
+
+        <TextView
+            android:id="@+id/status_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:background="@color/transparent"
+            android:padding="8dp"
+            android:text="@string/msg_default_status"
+            android:textColor="@color/status_text" />
+    <!--</FrameLayout>-->
+
+
+</FrameLayout>

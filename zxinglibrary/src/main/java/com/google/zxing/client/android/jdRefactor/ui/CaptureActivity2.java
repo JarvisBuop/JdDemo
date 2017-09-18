@@ -26,7 +26,6 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -35,16 +34,15 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.DecodeHintType;
 import com.google.zxing.Result;
-import com.google.zxing.ResultMetadataType;
 import com.google.zxing.ResultPoint;
 import com.google.zxing.client.android.FinishListener;
-import com.google.zxing.client.android.Intents;
 import com.google.zxing.client.android.R;
 import com.google.zxing.client.android.ViewfinderView;
 import com.google.zxing.client.android.camera.CameraManager;
@@ -52,13 +50,16 @@ import com.google.zxing.client.android.clipboard.ClipboardInterface;
 import com.google.zxing.client.android.jdRefactor.codehelp.AmbientLightManager2;
 import com.google.zxing.client.android.jdRefactor.codehelp.BeepManager2;
 import com.google.zxing.client.android.jdRefactor.codehelp.InactivityTimer2;
+import com.google.zxing.client.android.jdRefactor.controller.JdCodeParams;
 import com.google.zxing.client.android.jdRefactor.handler.CaptureActivityHandler2;
+import com.google.zxing.client.android.jdRefactor.statusmode.ResultPostBack;
+import com.google.zxing.client.android.jdRefactor.ui.viewfinder.JdDraw;
 
 import java.io.IOException;
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.EnumSet;
 import java.util.Map;
-import java.util.Set;
 
 import static com.google.zxing.client.android.jdRefactor.controller.JdCodeParams.COPY_2_CLIPBOARD;
 import static com.google.zxing.client.android.jdRefactor.controller.JdCodeParams.ISMULTI_SCANMODE;
@@ -76,24 +77,14 @@ import static com.google.zxing.client.android.jdRefactor.controller.JdCodeParams
  * 2.条形码扫不到注意横屏;
  */
 public final class CaptureActivity2 extends Activity implements SurfaceHolder.Callback {
-
     private static final String TAG = CaptureActivity2.class.getSimpleName();
-
-    private static final long DEFAULT_INTENT_RESULT_DURATION_MS = 1500L;
+    public static final String ENTER_CODE_PARAMS = "ENTER_PARAMS";//自定义设置参数;
+    public static final String REQUEST_CODE_LIST = "CAPTURE_LIST";//批量扫描;key
+    public static final String REQUEST_CODE_META = "CAPTURE_META";//单次扫描;key
     private static final long BULK_MODE_SCAN_DELAY_MS = 1000L;
-    private static final String[] ZXING_URLS = {"http://zxing.appspot.com/scan", "zxing://scan/"};
-
-    private static final int HISTORY_REQUEST_CODE = 0x0000bacc;
-
-    private static final Collection<ResultMetadataType> DISPLAYABLE_METADATA_TYPES =
-            EnumSet.of(ResultMetadataType.ISSUE_NUMBER,
-                    ResultMetadataType.SUGGESTED_PRICE,
-                    ResultMetadataType.ERROR_CORRECTION_LEVEL,
-                    ResultMetadataType.POSSIBLE_COUNTRY);
 
     private CameraManager cameraManager;
     private CaptureActivityHandler2 handler;
-    private Result savedResultToShow;
     private ViewfinderView viewfinderView;
     private TextView statusView;
     private Result lastResult;
@@ -105,6 +96,10 @@ public final class CaptureActivity2 extends Activity implements SurfaceHolder.Ca
     private InactivityTimer2 inactivityTimer2;
     private BeepManager2 beepManager;
     private AmbientLightManager2 ambientLightManager;
+
+    private ImageView imageView;
+    private ArrayList<ResultPostBack> mMultiResultList;
+
 
     public ViewfinderView getViewfinderView() {
         return viewfinderView;
@@ -130,8 +125,17 @@ public final class CaptureActivity2 extends Activity implements SurfaceHolder.Ca
         inactivityTimer2 = new InactivityTimer2(this);
         beepManager = new BeepManager2(this);
         ambientLightManager = new AmbientLightManager2(this);
+        initIntent();
+    }
 
-        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+    private void initIntent() {
+        Serializable serializableExtra = getIntent().getSerializableExtra(ENTER_CODE_PARAMS);
+        if (serializableExtra != null && serializableExtra instanceof JdCodeParams.ParamsBuilder) {
+            JdCodeParams.ParamsBuilder builder = (JdCodeParams.ParamsBuilder) serializableExtra;
+            builder.commit();
+        } else {
+            JdCodeParams.resetParams();
+        }
     }
 
     @Override
@@ -147,6 +151,7 @@ public final class CaptureActivity2 extends Activity implements SurfaceHolder.Ca
         viewfinderView.setCameraManager(cameraManager);
 
         statusView = (TextView) findViewById(R.id.status_view);//底部文字;
+        imageView = (ImageView) findViewById(R.id.image_multi);
 
         handler = null;
         lastResult = null;
@@ -163,6 +168,26 @@ public final class CaptureActivity2 extends Activity implements SurfaceHolder.Ca
             // Install the callback and wait for surfaceCreated() to init the camera.
             surfaceHolder.addCallback(this);
         }
+
+        initAct();
+    }
+
+    private void initAct() {
+        imageView.setVisibility(ISMULTI_SCANMODE ? View.VISIBLE : View.GONE);
+        if (ISMULTI_SCANMODE) {
+            mMultiResultList = new ArrayList<>();
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent();
+                    intent.putExtra(REQUEST_CODE_LIST, mMultiResultList);
+                    setResult(RESULT_OK, intent);
+                    finish();
+                }
+            });
+        }
+        //更改样式;
+        viewfinderView.setViewDraw(new JdDraw());
     }
 
     private void initParams() {
@@ -183,7 +208,7 @@ public final class CaptureActivity2 extends Activity implements SurfaceHolder.Ca
 
         Intent intent = getIntent();
 
-        copyToClipboard = COPY_2_CLIPBOARD && (intent == null || intent.getBooleanExtra(Intents.Scan.SAVE_HISTORY, true));
+        copyToClipboard = COPY_2_CLIPBOARD;
 
 //        decodeFormats = DecodeFormatManager2.getAllFormat(null);//刚开始扫描肯定没有初始化;
         decodeFormats = null;//刚开始扫描肯定没有初始化;
@@ -289,6 +314,7 @@ public final class CaptureActivity2 extends Activity implements SurfaceHolder.Ca
 
     /**
      * A valid barcode has been found, so give an indication of success and show the results.
+     * 解码成功回调的方法
      *
      * @param rawResult   The contents of the barcode.
      * @param scaleFactor amount by which thumbnail was scaled
@@ -305,44 +331,28 @@ public final class CaptureActivity2 extends Activity implements SurfaceHolder.Ca
             drawResultPoints(barcode, scaleFactor, rawResult);
         }
 
-        Log.e("jarvis", rawResult.toString() + "\n" + barcode.toString() + "\n" + scaleFactor);
-        Log.e("jarvis", rawResult.getText() + "/" + rawResult.getBarcodeFormat() + "/" + rawResult.getNumBits());
-        Map<ResultMetadataType, Object> resultMetadata = rawResult.getResultMetadata();
-        if (resultMetadata != null) {
-            Set<Map.Entry<ResultMetadataType, Object>> entries = resultMetadata.entrySet();
-            for (Map.Entry<ResultMetadataType, Object> entry : entries) {
-                Log.e("jarvismap", entry.getKey().toString() + "/" + entry.getValue().toString());
-            }
-        }
-        // TODO: 2017/9/15 复制到粘贴板;
-        if (rawResult != null) maybeSetClipboard(rawResult.getText());
         //  TODO: 2017/9/15 批量扫描模式;
         if (fromLiveScan && ISMULTI_SCANMODE) {
             Toast.makeText(getApplicationContext(),
-                    getResources().getString(R.string.msg_bulk_mode_scanned) + " (" + rawResult.getText() + ')',
+                    getResources().getString(R.string.msg_bulk_mode_scanned)/* + " (" + rawResult.getText() + ')'*/,
                     Toast.LENGTH_SHORT).show();
-
+            //TransactionTooLargeException 防止数据过大;
+            mMultiResultList.add(new ResultPostBack(rawResult.getText(), null, rawResult.getNumBits(), null,
+                    rawResult.getBarcodeFormat(), null, rawResult.getTimestamp(), null, scaleFactor));
             // Wait a moment or else it will scan the same barcode continuously about 3 times
             restartPreviewAfterDelay(BULK_MODE_SCAN_DELAY_MS);
         }
-// TODO: 2017/9/15 元数据
-        Map<ResultMetadataType, Object> metadata = rawResult.getResultMetadata();
-        if (metadata != null) {
-            StringBuilder metadataText = new StringBuilder(20);
-            for (Map.Entry<ResultMetadataType, Object> entry : metadata.entrySet()) {
-                if (DISPLAYABLE_METADATA_TYPES.contains(entry.getKey())) {
-                    Log.e("jarvis", entry.getValue().toString());
-                    metadataText.append(entry.getValue()).append('\n');
-                }
-            }
-        }
-
-//        if (barcode != null) {
-//            viewfinderView.drawResultBitmap(barcode);
-//        }
+        // TODO: 2017/9/15 复制到粘贴板;
+        if (rawResult != null) maybeSetClipboard(rawResult.getText());
 
         //TODO 回调处理;
-
+        if (!ISMULTI_SCANMODE) {
+            Intent intent = new Intent();
+            intent.putExtra(REQUEST_CODE_META, new ResultPostBack(rawResult.getText(), rawResult.getRawBytes(), rawResult.getNumBits(), rawResult.getResultPoints(),
+                    rawResult.getBarcodeFormat(), rawResult.getResultMetadata(), rawResult.getTimestamp(), barcode, scaleFactor));
+            setResult(RESULT_OK, intent);
+            finish();
+        }
     }
 
     /**
@@ -410,7 +420,6 @@ public final class CaptureActivity2 extends Activity implements SurfaceHolder.Ca
                 //此方法开始扫描;
                 handler = new CaptureActivityHandler2(this, decodeFormats, decodeHints, characterSet, cameraManager);
             }
-            savedResultToShow = null;
         } catch (IOException ioe) {
             Log.w(TAG, ioe);
             displayFrameworkBugMessageAndExit();

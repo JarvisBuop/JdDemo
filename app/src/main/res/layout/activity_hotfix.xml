@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="16dp"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/text_bug"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="有 bug 版本;" />
+
+    <ImageView
+        android:id="@+id/text_bug2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/ic_launcher_round" />
+
+    <TextView
+        android:id="@+id/txt_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@mipmap/ic_help"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="INFO:" />
+
+    <Button
+        android:id="@+id/btn_load"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="加载路径文件" />
+
+    <Button
+        android:id="@+id/btn_load_lib"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="加载库" />
+
+    <Button
+        android:id="@+id/btn_clear_patch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="清除路径" />
+
+    <Button
+        android:id="@+id/kill_self"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="关闭程序,安装补丁" />
+</LinearLayout>

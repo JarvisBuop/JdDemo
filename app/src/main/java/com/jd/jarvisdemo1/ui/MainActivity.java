@@ -21,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView mRecy;
     MybaseAdapter mAdapter;
     List<IntentData> mDataList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,8 +31,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initData() {
-        mDataList.add(new IntentData("测试searchview",R.mipmap.ic_help,SearchAct.class));
-        mDataList.add(new IntentData("测试二维码 zxing",R.mipmap.ic_help,ZxingAct.class));
+        mDataList.add(new IntentData("测试searchview", R.mipmap.ic_help, SearchAct.class));
+        mDataList.add(new IntentData("测试二维码 zxing", R.mipmap.ic_help, ZxingAct.class));
+        mDataList.add(new IntentData("测试热更新", R.mipmap.ic_launcher, HotFixAct.class));
+        mDataList.add(new IntentData("测试画板", R.mipmap.ic_launcher, SignatureAct.class));
 
         mAdapter.notifyDataSetChanged();
     }
@@ -44,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         mRecy.setAdapter(mAdapter);
     }
 
-    private class MybaseAdapter extends RecyclerView.Adapter{
+    private class MybaseAdapter extends RecyclerView.Adapter {
 
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -54,14 +57,14 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            if(holder instanceof MyViewholder){
+            if (holder instanceof MyViewholder) {
                 final IntentData intentData = mDataList.get(position);
                 ((MyViewholder) holder).txt.setText(intentData.title);
                 ((MyViewholder) holder).img.setImageResource(intentData.ids);
                 ((MyViewholder) holder).txt.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(MainActivity.this,intentData.intentTarget);
+                        Intent intent = new Intent(MainActivity.this, intentData.intentTarget);
                         startActivity(intent);
                     }
                 });
@@ -70,13 +73,14 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public int getItemCount() {
-            return mDataList == null?0:mDataList.size();
+            return mDataList == null ? 0 : mDataList.size();
         }
     }
 
     private class MyViewholder extends RecyclerView.ViewHolder {
         private TextView txt;
         private ImageView img;
+
         public MyViewholder(View itemView) {
             super(itemView);
             init(itemView);
